@@ -23,8 +23,11 @@
             "modules/*": ["src/modules/*"],
             "types/*": ["src/types/*"],
             "utils/*": ["src/utils/*"],
-            "configs/*": ["src/configs/*"],
-            "routers/*": ["src/routers/*"]
+            "routers/*": ["src/routers/*"],
+            "assets/*": ["src/assets/*"],
+            "styles/*": ["src/styles/*"],
+            "layouts/*": ["src/layouts/*"],
+            "configs/*": ["src/configs/*"]
         }
     },
     "include": ["src"],

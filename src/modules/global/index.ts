@@ -11,6 +11,8 @@ export interface IGlobalState {
     // 主题：深色 浅色
     theme: ETheme
     color: string
+    // 是否显示个人中心弹窗
+    setting: boolean
 }
 
 const defaultTheme = ETheme.light
@@ -18,6 +20,7 @@ const defaultTheme = ETheme.light
 const initialState: IGlobalState = {
     theme: defaultTheme,
     color: defaultColor?.[0],
+    setting: false,
 }
 
 // 创建带有命名空间的reducer
@@ -55,10 +58,13 @@ const globalSlice = createSlice({
             state.theme = finalTheme
             document.documentElement.setAttribute('theme-mode', finalTheme)
         },
+        toggleSetting: (state) => {
+            state.setting = !state.setting
+        },
     },
 })
 
-export const { switchTheme, switchColor } = globalSlice.actions
+export const { switchTheme, switchColor, toggleSetting } = globalSlice.actions
 
 export const selectGlobal = (state: RootState) => state.global
 
