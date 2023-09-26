@@ -4,11 +4,11 @@ import { TypedUseSelectorHook, useSelector, useDispatch } from 'react-redux'
 import global from './global'
 
 const reducer = combineReducers({
-  global,
+    global,
 })
 
 export const store = configureStore({
-  reducer
+    reducer,
 })
 
 export type RootState = ReturnType<typeof store.getState>

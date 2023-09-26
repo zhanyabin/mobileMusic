@@ -15,7 +15,7 @@ export default memo(() => {
     const globalState = useAppSelector(selectGlobal)
     const element = useRoutes(routers)
     return (
-        <Layout>
+        <Layout style={{ height: '100vh' }}>
             <Header>
                 <Nav />
             </Header>

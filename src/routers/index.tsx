@@ -26,15 +26,23 @@ const routes: Array<Router> = [
         name: 'home',
         path: '/home',
         meta: {
-            title: '首页'
+            title: '首页',
         },
         element: lazyLoad('Home'),
+    },
+    {
+        name: 'my',
+        path: '/my',
+        meta: {
+            title: '我的',
+        },
+        element: lazyLoad('My'),
     },
     {
         name: 'login',
         meta: {
             title: '登录',
-            hidden: true
+            hidden: true,
         },
         path: '/login',
         element: lazyLoad('Login'),
