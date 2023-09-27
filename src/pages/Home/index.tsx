@@ -1,11 +1,16 @@
 import React, { memo } from 'react'
 import Style from './index.module.less'
 import { Button } from 'tdesign-react'
-
+import * as API from 'api/Home'
 const Home = () => {
+    const getApi = () => {
+        API.newsong().then(res => {
+            console.log('res', res)
+        })
+    }
     return (
         <>
-            <Button variant='outline'> 搜索 </Button>
+            <Button variant='outline' onClick={getApi}> 搜索 </Button>
             <div
                 style={{
                     width: '300px',

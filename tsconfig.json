@@ -27,7 +27,9 @@
             "assets/*": ["src/assets/*"],
             "styles/*": ["src/styles/*"],
             "layouts/*": ["src/layouts/*"],
-            "configs/*": ["src/configs/*"]
+            "configs/*": ["src/configs/*"],
+            "hooks/*": ["src/hooks/*"],
+            "api/*": ["src/api/*"]
         }
     },
     "include": ["src"],

@@ -26,7 +26,7 @@ export default memo(() => {
             <Drawer
                 destroyOnClose
                 visible={globalState.setting}
-                size='40%'
+                size='60%'
                 footer={false}
                 header='菜单'
                 onClose={() => dispatch(toggleSetting())}>

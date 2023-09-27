@@ -82,10 +82,12 @@ export function insertThemeStylesheet(
     colorMap: Record<string, string>,
     mode: 'light' | 'dark',
 ) {
-    const isDarkMode = mode === 'dark'
-    const root = !isDarkMode
-        ? `:root[theme-color='${theme}']`
-        : `:root[theme-color='${theme}'][theme-mode='dark']`
+    // const isDarkMode = mode === 'dark'
+    // const root = !isDarkMode
+    //     ? `:root[theme-color='${theme}']`
+    //     : `:root[theme-color='${theme}'][theme-mode='dark']`
+
+    const root = `:root[theme-color='${theme}']`
 
     const styleSheet = document.createElement('style')
     styleSheet.type = 'text/css'

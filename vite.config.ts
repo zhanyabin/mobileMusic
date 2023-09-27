@@ -6,6 +6,13 @@ import path from 'path'
 export default defineConfig({
     server: {
         host: '0.0.0.0',
+        proxy: {
+            '/api': {
+                target: 'http://localhost:3000',
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/api/, '')
+            },
+        },
     },
     resolve: {
         alias: {
@@ -20,7 +27,10 @@ export default defineConfig({
             assets: path.resolve(__dirname, 'src/assets'),
             styles: path.resolve(__dirname, 'src/styles'),
             layouts: path.resolve(__dirname, 'src/layouts'),
+            hooks: path.resolve(__dirname, 'src/hooks'),
+            api: path.resolve(__dirname, 'src/api'),
         },
     },
     plugins: [react(), svgr()],
+
 })
