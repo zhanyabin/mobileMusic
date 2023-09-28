@@ -22,7 +22,7 @@ export default memo(() => {
             <Content>
                 <Suspense fallback={<div>loading...</div>}>{element}</Suspense>
             </Content>
-            <Footer>底部</Footer>
+            {/*<Footer>底部</Footer>*/}
             <Drawer
                 destroyOnClose
                 visible={globalState.setting}

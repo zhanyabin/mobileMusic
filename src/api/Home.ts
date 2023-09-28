@@ -24,7 +24,7 @@ export function playlist(params: object) {
 }
 
 // 根据歌单ID获取音乐  热歌榜 3778678
-export function getHotSongList(id: number) {
+export function getHotSongList(id: string) {
     return request({
         url: '/playlist/detail',
         method: 'get',
