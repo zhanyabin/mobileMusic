@@ -3,6 +3,7 @@ import Style from './index.module.less'
 import Title from 'components/Title'
 import { Image } from 'tdesign-react'
 import { PlayCircleStrokeIcon } from 'tdesign-icons-react'
+import { useNavigate } from 'react-router-dom'
 
 interface Interface {
     list: Array<any>
@@ -11,9 +12,24 @@ interface Interface {
 
 const Recommend = (props: Interface) => {
     const { list, newSongList } = props
+    const navigate = useNavigate()
+
+    const openPage = (id: number, trackCount: number) => {
+        navigate('/player', {
+            state: {
+                id,
+                trackCount,
+            },
+        })
+    }
 
     const playList = list.map((item) => (
-        <div className={Style.list} key={item.id}>
+        <div
+            className={Style.list}
+            key={item.id}
+            onClick={() => {
+                openPage(item.id, item.trackCount)
+            }}>
             <Image fit={'cover'} shape={'round'} src={item.coverImgUrl} />
             <div className={Style.text}>{item.name}</div>
         </div>

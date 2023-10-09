@@ -14,6 +14,7 @@ const Home = () => {
     const [newSongList, setNewSongList] = useState([])
     // 排行热歌
     const [rankingData, setRankingData] = useState({})
+
     const tabList = [
         {
             label: '推荐',
@@ -91,18 +92,6 @@ const Home = () => {
     return (
         <>
             <Tabs className={Style.tabs} defaultValue={1} list={tabList} onChange={setTabsValue} />
-            {/*<div*/}
-            {/*    style={{*/}
-            {/*        width: '300px',*/}
-            {/*        height: '300px',*/}
-            {/*        display: 'flex',*/}
-            {/*        justifyContent: 'center',*/}
-            {/*        alignItems: 'center',*/}
-            {/*        border: '1px solid var(--td-gray-color-9)',*/}
-            {/*        backgroundColor: 'var(--td-brand-color)',*/}
-            {/*    }}>*/}
-            {/*    <div className={Style.settingSubTitle}>测试一下啊</div>*/}
-            {/*</div>*/}
         </>
     )
 }

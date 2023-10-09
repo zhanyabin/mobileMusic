@@ -1,0 +1,45 @@
+.list {
+    height: 100%;
+    overflow: auto;
+    padding: 0 16px;
+
+    .listItem {
+        width: 100%;
+        padding: 6px 0;
+        box-sizing: border-box;
+        gap: 0 10px;
+
+        .left {
+            //width: 4%;
+        }
+
+        .right {
+            width: 94%;
+            .title {
+                width: 94%;
+                font-weight: bold;
+            }
+
+            .time {
+                //width: 10%;
+                text-align: right;
+                color: var(--td-text-color-secondary);
+            }
+
+            .singer {
+                font-size: var(--td-size-5);
+                color: var(--td-text-color-secondary);
+            }
+        }
+    }
+
+    .listItem:not(:last-child) {
+        border-bottom: 1px solid var(--td-border-level-1-color);
+    }
+}
+
+:global {
+    .t-drawer__body {
+        padding: 0;
+    }
+}

@@ -34,7 +34,7 @@ export function getHotSongList(id: string) {
     })
 }
 
-/**参数 :
+/**获取歌单所有歌曲 参数 :
  * @ID 必选
  * @limit 取出歌单数量 , 默认为 50
  * @offset 偏移数量 , 用于分页 , 如 :( 评论页数 -1)*50, 其中 50 为 limit 的值

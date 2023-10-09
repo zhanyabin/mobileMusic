@@ -1,11 +1,16 @@
-import { lazy } from 'react'
+// import { lazy } from 'react'
 import { Navigate } from 'react-router-dom'
+import Home from 'pages/Home'
+import My from 'pages/My'
+import Login from 'pages/Login'
+import NotFound from 'pages/NotFound'
+import Player from 'pages/Player'
 
 // 快速导入工具函数
-const lazyLoad = (moduleName: string) => {
-    const Module = lazy(() => import(`../pages/${moduleName}`))
-    return <Module />
-}
+// const lazyLoad = (moduleName: string) => {
+//     const Module = lazy(() => import(`../pages/${moduleName}`))
+//     return <Module />
+// }
 
 interface Router {
     name?: string
@@ -28,7 +33,8 @@ const routes: Array<Router> = [
         meta: {
             title: '首页',
         },
-        element: lazyLoad('Home'),
+        // element: lazyLoad('Home'),
+        element: <Home />,
     },
     {
         name: 'my',
@@ -36,7 +42,16 @@ const routes: Array<Router> = [
         meta: {
             title: '我的',
         },
-        element: lazyLoad('My'),
+        element: <My />,
+    },
+    {
+        name: 'player',
+        path: '/player',
+        meta: {
+            title: '播放器',
+            hidden: false,
+        },
+        element: <Player />,
     },
     {
         name: 'login',
@@ -45,11 +60,11 @@ const routes: Array<Router> = [
             hidden: true,
         },
         path: '/login',
-        element: lazyLoad('Login'),
+        element: <Login />,
     },
     {
         path: '*',
-        element: lazyLoad('NotFound'),
+        element: <NotFound />,
     },
 ]
 
