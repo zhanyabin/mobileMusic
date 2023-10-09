@@ -14,11 +14,12 @@ const Recommend = (props: Interface) => {
     const { list, newSongList } = props
     const navigate = useNavigate()
 
-    const openPage = (id: number, trackCount: number) => {
+    const openPage = (id: number, trackCount: number, isSongs: boolean = true) => {
         navigate('/player', {
             state: {
                 id,
                 trackCount,
+                isSongs,
             },
         })
     }
@@ -36,7 +37,12 @@ const Recommend = (props: Interface) => {
     ))
 
     const newList = newSongList.map((item) => (
-        <div className={`${Style.item} flexSb`} key={item.id}>
+        <div
+            className={`${Style.item} flexSb`}
+            key={item.id}
+            onClick={() => {
+                openPage(item.id, item.trackCount, false)
+            }}>
             <div className={Style.left}>
                 <p className={'ellipsis'}>{item.name}</p>
                 <p className={`${Style.singer} ellipsis`}>{item.artistText}</p>

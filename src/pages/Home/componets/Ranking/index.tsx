@@ -4,12 +4,14 @@ import indexIcon from 'assets/images/index_icon_2x.png'
 import Title from 'components/Title'
 import { PlayCircleStrokeIcon } from 'tdesign-icons-react'
 import { BackTop, List } from 'tdesign-react'
+import { useNavigate } from 'react-router-dom'
 
 interface Interface {
     data: object | any
 }
 
 const Ranking = (props: Interface) => {
+    const navigate = useNavigate()
     const [container, setContainer] = useState<any>(null)
     const { data } = props
     const style: any = {
@@ -24,6 +26,16 @@ const Ranking = (props: Interface) => {
         overflowY: 'scroll',
         overflowX: 'hidden',
     }
+
+    const openPage = (id: number, trackCount: number, isSongs: boolean = true) => {
+        navigate('/player', {
+            state: {
+                id,
+                trackCount,
+                isSongs,
+            },
+        })
+    }
     return (
         <div>
             <div className={Style.topBlock}>
@@ -35,7 +47,12 @@ const Ranking = (props: Interface) => {
                 <Title name={'音乐列表'} />
                 <List className={Style.newList}>
                     {(data.tracks || []).map((item: any) => (
-                        <div className={`${Style.item} flexSb`} key={item.id}>
+                        <div
+                            className={`${Style.item} flexSb`}
+                            key={item.id}
+                            onClick={() => {
+                                openPage(item.id, item.trackCount, false)
+                            }}>
                             <div className={Style.left}>
                                 <p className={'ellipsis'}>{item.name}</p>
                                 <p className={`${Style.singer} ellipsis`}>

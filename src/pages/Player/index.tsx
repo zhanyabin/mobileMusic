@@ -1,9 +1,11 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useState, useRef } from 'react'
 import Style from './index.module.less'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useUpdateEffect } from 'ahooks'
 import { getPlayListAll } from 'api/Home'
+import { getSongDetail, getSongUrl } from 'api/Player'
 import { List, Drawer, Button } from 'tdesign-react'
+import wave from 'assets/images/wave.gif'
 import _ from 'lodash'
 
 const Player = () => {
@@ -17,6 +19,12 @@ const Player = () => {
     })
     const [listData, setListData] = useState<any>([])
     const [visible, setVisible] = useState(false)
+    // 当前播放音乐的下标
+    const [activeIndex, setActiveIndex] = useState(-1)
+    // 获取音乐控件
+    const audioRef = useRef(new Audio(''))
+    // 控制播放状态
+    const [playStatus, setPlayStatus] = useState(false)
 
     // 获取歌单列表
     const getSongList = () => {
@@ -28,10 +36,10 @@ const Player = () => {
                     arr.push(ar.name)
                 })
                 item.singer = arr.join('/')
-                console.log('item.singer', item.singer)
             })
             const arr = _.uniqBy(listData.concat(res.songs), 'id')
             setListData(arr)
+            setActiveIndex(0)
             setIsLoading(false)
         })
     }
@@ -54,12 +62,63 @@ const Player = () => {
         return `${getType(min)}:${getType(sec)}`
     }
 
+    // 获取歌曲详情
+    const getSongDetailEvent = (ids: string | number) => {
+        getSongDetail(ids).then((res) => {
+            res.songs.forEach((item: any) => {
+                let arr: any[] = []
+                item.ar.forEach((ar: any) => {
+                    arr.push(ar.name)
+                })
+                item.singer = arr.join('/')
+            })
+            const arr = _.uniqBy(listData.concat(res.songs), 'id')
+            setListData(arr)
+            setActiveIndex(0)
+        })
+    }
+
+    // 加载歌曲
+    const loadSong = async () => {
+        const id = listData[activeIndex].id
+        const songData = await getSongUrl(id)
+        audioRef.current.src = songData.data[0]?.url
+        setPlayStatus(true)
+    }
+
+    // 用于分页
     useUpdateEffect(() => {
         getSongList()
     }, [search])
 
+    // 歌曲列表更新
+    useUpdateEffect(() => {
+        loadSong()
+    }, [activeIndex])
+
+    // 监听播放状态
+    useUpdateEffect(() => {
+        audioRef.current
+            .play()
+            .then((r) => {})
+            .catch((err) => {
+                alert('请手动点击播放')
+                console.log('err', err)
+            })
+    }, [playStatus])
+
     useEffect(() => {
-        getSongList()
+        // 需要判断是否是歌单进入还是单首歌曲进入
+        let { isSongs, id } = location.state
+        if (isSongs) {
+            getSongList()
+        } else {
+            getSongDetailEvent(id)
+        }
+        return () => {
+            audioRef.current.pause()
+            audioRef.current.src = ''
+        }
     }, [])
     return (
         <div>
@@ -70,6 +129,7 @@ const Player = () => {
                 打开
             </Button>
             <Drawer
+                className={Style.playerDrawer}
                 header='歌曲列表'
                 placement='bottom'
                 visible={visible}
@@ -86,7 +146,12 @@ const Player = () => {
                     onScroll={handleScroll}>
                     {listData.map((item: any, index: number) => (
                         <li key={item.id} className={`${Style.listItem} flexSb`}>
-                            <div className={Style.index}>{index + 1}</div>
+                            {/*<div className={Style.index}>{index + 1}</div>*/}
+                            <div className={Style.index}>
+                                {activeIndex === index && playStatus ? (
+                                    <img src={wave} alt='' />
+                                ) : index + 1}
+                            </div>
                             <div className={Style.right}>
                                 <div className='flexSb'>
                                     <div className={Style.title}>{item.name}</div>

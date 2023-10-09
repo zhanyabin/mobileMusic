@@ -10,3 +10,13 @@ export function getSongUrl(id: number) {
         },
     })
 }
+
+export function getSongDetail(ids: number | string) {
+    return request({
+        url: '/song/detail',
+        method: 'get',
+        params: {
+            ids,
+        },
+    })
+}

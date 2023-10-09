@@ -1,3 +1,10 @@
+.playerDrawer {
+    :global {
+        .t-drawer__body {
+            padding: 0;
+        }
+    }
+}
 .list {
     height: 100%;
     overflow: auto;
@@ -35,11 +42,5 @@
 
     .listItem:not(:last-child) {
         border-bottom: 1px solid var(--td-border-level-1-color);
-    }
-}
-
-:global {
-    .t-drawer__body {
-        padding: 0;
     }
 }
