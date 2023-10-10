@@ -1,0 +1,72 @@
+.slider {
+    font: var(--td-font-body-medium);
+    color: var(--td-text-color-primary);
+    box-sizing: border-box;
+    margin: 0;
+    list-style: none;
+    height: calc(var(--td-comp-paddingTB-xs) * 2 + var(--td-size-2));
+    width: 100%;
+    position: relative;
+    padding: var(--td-comp-paddingTB-xs) 0;
+
+    .slider__rail {
+        position: absolute;
+        width: 100%;
+        height: var(--td-size-2);
+        background-color: var(--td-bg-color-secondarycomponent);
+        -webkit-transition: .2s linear;
+        transition: .2s linear;
+        border-radius: var(--td-radius-round);
+
+        .slider__track {
+            width: 15%;
+            position: absolute;
+            height: var(--td-size-2);
+            background-color: var(--td-brand-color);
+            right: auto;
+            border-radius: var(--td-radius-round);
+        }
+
+        .slider__button_wrapper {
+            left: 15%;
+            position: absolute;
+            z-index: 2;
+            top: 50%;
+            -webkit-transform: translate(-50%,-50%);
+            transform: translate(-50%,-50%);
+            background-color: transparent;
+            text-align: center;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            line-height: normal;
+            outline: none;
+            cursor: pointer;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+
+            .slider__button {
+                width: var(--td-comp-size-xxxs);
+                height: var(--td-comp-size-xxxs);
+                border: 2px solid var(--td-brand-color);
+                background-color: #fff;
+                border-radius: var(--td-radius-circle);
+                -webkit-transition: .2s;
+                transition: .2s;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+                -webkit-box-shadow: var(--td-shadow-1);
+                box-shadow: var(--td-shadow-1);
+            }
+        }
+    }
+}

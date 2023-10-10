@@ -1,14 +1,19 @@
 import React, { memo, useEffect, useState, useRef } from 'react'
-import Style from './index.module.less'
+import _ from 'lodash'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { List, Drawer, Button } from 'tdesign-react'
+import { IconFont } from 'tdesign-icons-react'
+import wave from 'assets/images/wave.gif'
 import { useUpdateEffect } from 'ahooks'
 import { getPlayListAll } from 'api/Home'
 import { getSongDetail, getSongUrl } from 'api/Player'
-import { List, Drawer, Button } from 'tdesign-react'
-import wave from 'assets/images/wave.gif'
-import _ from 'lodash'
+import { useAppSelector } from 'modules/store'
+import { selectGlobal } from 'modules/global'
+import Style from './index.module.less'
+import Slider from 'components/Slider'
 
 const Player = () => {
+    const globalState = useAppSelector(selectGlobal)
     const navigate = useNavigate()
     const location: any = useLocation()
     const [isLoading, setIsLoading] = useState(false)
@@ -25,6 +30,13 @@ const Player = () => {
     const audioRef = useRef(new Audio(''))
     // 控制播放状态
     const [playStatus, setPlayStatus] = useState(false)
+    // 查看光暗模式切换
+    const [themeMode, setThemeMode] = useState(globalState.theme)
+
+    const styleGif: any = {
+        transform: 'rotate(180deg)',
+        background: 'black',
+    }
 
     // 获取歌单列表
     const getSongList = () => {
@@ -39,7 +51,9 @@ const Player = () => {
             })
             const arr = _.uniqBy(listData.concat(res.songs), 'id')
             setListData(arr)
-            setActiveIndex(0)
+            if (activeIndex === -1) {
+                setActiveIndex(0)
+            }
             setIsLoading(false)
         })
     }
@@ -53,13 +67,12 @@ const Player = () => {
     }
 
     // 处理时间
-    const getType = (time: number | string) => {
-        return time < 10 ? '0' + time : String(time)
-    }
-    const formatTime = (time: number) => {
-        let min = Math.floor(time / 1000 / 60)
-        let sec = ((time / 1000) % 60).toFixed(0)
-        return `${getType(min)}:${getType(sec)}`
+    const formatTime = (seconds: number) => {
+        const minutes = Math.floor(seconds / 60)
+        const remainingSeconds = Math.floor(seconds % 60)
+        const formattedMinutes = String(minutes).padStart(2, '0')
+        const formattedSeconds = String(remainingSeconds).padStart(2, '0')
+        return `${formattedMinutes}:${formattedSeconds}`
     }
 
     // 获取歌曲详情
@@ -83,7 +96,37 @@ const Player = () => {
         const id = listData[activeIndex].id
         const songData = await getSongUrl(id)
         audioRef.current.src = songData.data[0]?.url
+        playSong()
         setPlayStatus(true)
+    }
+
+    const playSong = () => {
+        audioRef.current
+            .play()
+            .then((r) => {})
+            .catch((e) => {})
+    }
+
+    const pauseSong = () => {
+        audioRef.current.pause()
+    }
+
+    // 播放下一首
+    const nextSong = () => {
+        let index = activeIndex + 1
+        if (index > listData.length) {
+            index = 0
+        }
+        setActiveIndex(index)
+    }
+
+    // 播放上一首
+    const previousSong = () => {
+        let index = activeIndex - 1
+        if (index < 0) {
+            index = listData.length - 1
+        }
+        setActiveIndex(index)
     }
 
     // 用于分页
@@ -91,21 +134,20 @@ const Player = () => {
         getSongList()
     }, [search])
 
-    // 歌曲列表更新
+    // 当前选中歌曲变更时加载歌曲
     useUpdateEffect(() => {
         loadSong()
     }, [activeIndex])
 
     // 监听播放状态
     useUpdateEffect(() => {
-        audioRef.current
-            .play()
-            .then((r) => {})
-            .catch((err) => {
-                alert('请手动点击播放')
-                console.log('err', err)
-            })
+        playStatus ? playSong() : pauseSong()
     }, [playStatus])
+
+    // 监听播放状态
+    useUpdateEffect(() => {
+        setThemeMode(globalState.theme)
+    }, [globalState.theme])
 
     useEffect(() => {
         // 需要判断是否是歌单进入还是单首歌曲进入
@@ -120,6 +162,7 @@ const Player = () => {
             audioRef.current.src = ''
         }
     }, [])
+
     return (
         <div>
             <Button
@@ -128,6 +171,31 @@ const Player = () => {
                 }}>
                 打开
             </Button>
+            <div className={`${Style.footer}`}>
+                <div>
+                    <Slider />
+                </div>
+                <div className={'flexSa'}>
+                    <IconFont name='textformat-wrap' size='30px'></IconFont>
+                    <div>
+                        <IconFont name='previous' size='40px' onClick={previousSong}></IconFont>
+                        <IconFont
+                            onClick={() => {
+                                setPlayStatus(!playStatus)
+                            }}
+                            name={playStatus ? 'pause-circle' : 'play-circle'}
+                            size='60px'
+                            style={{ margin: '0 15px' }}></IconFont>
+                        <IconFont name='next' size='40px' onClick={nextSong}></IconFont>
+                    </div>
+                    <IconFont
+                        name='form'
+                        size='30px'
+                        onClick={() => {
+                            setVisible(true)
+                        }}></IconFont>
+                </div>
+            </div>
             <Drawer
                 className={Style.playerDrawer}
                 header='歌曲列表'
@@ -145,17 +213,28 @@ const Player = () => {
                     className={Style.list}
                     onScroll={handleScroll}>
                     {listData.map((item: any, index: number) => (
-                        <li key={item.id} className={`${Style.listItem} flexSb`}>
+                        <li
+                            key={item.id}
+                            className={`${Style.listItem} flexSb`}
+                            onClick={() => {
+                                setActiveIndex(index)
+                            }}>
                             {/*<div className={Style.index}>{index + 1}</div>*/}
                             <div className={Style.index}>
                                 {activeIndex === index && playStatus ? (
-                                    <img src={wave} alt='' />
-                                ) : index + 1}
+                                    <img
+                                        src={wave}
+                                        style={themeMode === 'light' ? styleGif : {}}
+                                        alt=''
+                                    />
+                                ) : (
+                                    index + 1
+                                )}
                             </div>
                             <div className={Style.right}>
                                 <div className='flexSb'>
                                     <div className={Style.title}>{item.name}</div>
-                                    <div className={Style.time}>{formatTime(item.dt)}</div>
+                                    <div className={Style.time}>{formatTime(item.dt / 1000)}</div>
                                 </div>
                                 <div className={Style.singer}>{item.singer}</div>
                             </div>
