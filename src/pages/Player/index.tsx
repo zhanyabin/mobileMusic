@@ -32,6 +32,12 @@ const Player = () => {
     const [playStatus, setPlayStatus] = useState(false)
     // 查看光暗模式切换
     const [themeMode, setThemeMode] = useState(globalState.theme)
+    // 获取当前播放时间
+    const [currentTime, setCurrentTime] = useState('00:00')
+    // 定时器
+    const intervalRef = useRef<any>(null)
+    // 进度条
+    const [progress, setProgress] = useState(0)
 
     const styleGif: any = {
         transform: 'rotate(180deg)',
@@ -75,7 +81,7 @@ const Player = () => {
         return `${formattedMinutes}:${formattedSeconds}`
     }
 
-    // 获取歌曲详情
+    // 获取首次进入时的歌曲详情
     const getSongDetailEvent = (ids: string | number) => {
         getSongDetail(ids).then((res) => {
             res.songs.forEach((item: any) => {
@@ -96,28 +102,38 @@ const Player = () => {
         const id = listData[activeIndex].id
         const songData = await getSongUrl(id)
         audioRef.current.src = songData.data[0]?.url
-        playSong()
         setPlayStatus(true)
+        playSong()
     }
 
     const playSong = () => {
         audioRef.current
             .play()
             .then((r) => {})
-            .catch((e) => {})
+            .catch((e) => {
+                setPlayStatus(false)
+            })
     }
 
     const pauseSong = () => {
         audioRef.current.pause()
     }
 
+    const changeSong = (index: number) => {
+        setProgress(0)
+        setActiveIndex(index)
+        setPlayStatus(true)
+        setCurrentTime('00:00')
+    }
+
     // 播放下一首
     const nextSong = () => {
         let index = activeIndex + 1
-        if (index > listData.length) {
+        if (index > listData.length - 1) {
             index = 0
         }
-        setActiveIndex(index)
+        console.log('index', index, 'listData.length', listData.length)
+        changeSong(index)
     }
 
     // 播放上一首
@@ -126,7 +142,31 @@ const Player = () => {
         if (index < 0) {
             index = listData.length - 1
         }
-        setActiveIndex(index)
+        changeSong(index)
+    }
+
+    // 判断是否可以播放, 并且获取当前播放时间
+    const handleCanPlay = () => {
+        clearInterval(intervalRef.current)
+        const audioElement = audioRef.current
+        intervalRef.current = setInterval(() => {
+            setCurrentTime(formatTime(audioElement.currentTime))
+            const percentage = (audioElement.currentTime / audioElement.duration) * 100
+            setProgress(percentage)
+        }, 1000)
+    }
+
+    // 结束播放
+    const endPlayback = () => {
+        console.log('结束播放', listData.length)
+        nextSong()
+    }
+
+    // 进度条点击事件
+    const musicTimeChange = (progressRatio: number) => {
+        const audioElement = audioRef.current
+        audioElement.currentTime = (progressRatio / 100) * audioElement.duration
+        setCurrentTime(formatTime(audioElement.currentTime))
     }
 
     // 用于分页
@@ -137,6 +177,16 @@ const Player = () => {
     // 当前选中歌曲变更时加载歌曲
     useUpdateEffect(() => {
         loadSong()
+            .then((r) => {})
+            .catch((err) => {
+                console.log('err', err)
+            })
+
+        const audioElement = audioRef.current
+        audioElement.addEventListener('ended', endPlayback)
+        return () => {
+            audioElement.addEventListener('ended', endPlayback)
+        }
     }, [activeIndex])
 
     // 监听播放状态
@@ -157,9 +207,14 @@ const Player = () => {
         } else {
             getSongDetailEvent(id)
         }
+
+        const audioElement = audioRef.current
+        audioElement.addEventListener('canplay', handleCanPlay)
         return () => {
             audioRef.current.pause()
             audioRef.current.src = ''
+            audioElement.removeEventListener('canplay', handleCanPlay)
+            clearInterval(intervalRef.current)
         }
     }, [])
 
@@ -172,8 +227,15 @@ const Player = () => {
                 打开
             </Button>
             <div className={`${Style.footer}`}>
-                <div>
-                    <Slider />
+                <div className={`flexSb ${Style.slider}`}>
+                    <div>{currentTime}</div>
+                    <Slider
+                        style={{ margin: '0 20px' }}
+                        value={progress}
+                        handleClick={musicTimeChange}
+                        changEnd={musicTimeChange}
+                    />
+                    <div>{formatTime(listData[activeIndex]?.dt / 1000) || '00:00'}</div>
                 </div>
                 <div className={'flexSa'}>
                     <IconFont name='textformat-wrap' size='30px'></IconFont>
@@ -217,7 +279,7 @@ const Player = () => {
                             key={item.id}
                             className={`${Style.listItem} flexSb`}
                             onClick={() => {
-                                setActiveIndex(index)
+                                changeSong(index)
                             }}>
                             {/*<div className={Style.index}>{index + 1}</div>*/}
                             <div className={Style.index}>
