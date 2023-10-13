@@ -46,6 +46,8 @@ declare module '*.less' {
 
 declare module 'tvision-color'
 
+declare module 'react-inlinesvg'
+
 declare interface ImportMeta {
     env: {
         MODE: 'development' | 'test' | 'release' | 'mock' | 'site'

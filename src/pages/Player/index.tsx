@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState, useRef } from 'react'
 import _ from 'lodash'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { List, Drawer, Button } from 'tdesign-react'
+import { List, Drawer, Button, MessagePlugin } from 'tdesign-react'
 import { IconFont } from 'tdesign-icons-react'
 import wave from 'assets/images/wave.gif'
 import { useUpdateEffect } from 'ahooks'
@@ -11,6 +11,28 @@ import { useAppSelector } from 'modules/store'
 import { selectGlobal } from 'modules/global'
 import Style from './index.module.less'
 import Slider from 'components/Slider'
+import SVG from 'react-inlinesvg'
+import listLoopIcon from 'assets/images/songtab_playmode_listloop.svg'
+import shuffleIcon from 'assets/images/songtab_desktop_playmode_shuffle.svg'
+import singlecycleIcon from 'assets/images/songtab_playmode_singlecycle.svg'
+
+const playModeData: any = [
+    {
+        src: listLoopIcon,
+        title: '列表播放',
+        type: 'list',
+    },
+    {
+        src: singlecycleIcon,
+        title: '单曲循环',
+        type: 'repeat',
+    },
+    {
+        src: shuffleIcon,
+        title: '随机播放',
+        type: 'random',
+    },
+]
 
 const Player = () => {
     const globalState = useAppSelector(selectGlobal)
@@ -38,6 +60,10 @@ const Player = () => {
     const intervalRef = useRef<any>(null)
     // 进度条
     const [progress, setProgress] = useState(0)
+    // 播放模式
+    const [playMode, setPlayMode] = useState('list')
+    const playModeRef = useRef(playMode)
+    const [modeDataIndex, setModeDataIndex] = useState(0)
 
     const styleGif: any = {
         transform: 'rotate(180deg)',
@@ -107,6 +133,7 @@ const Player = () => {
     }
 
     const playSong = () => {
+        console.log('paley')
         audioRef.current
             .play()
             .then((r) => {})
@@ -120,10 +147,15 @@ const Player = () => {
     }
 
     const changeSong = (index: number) => {
+        audioRef.current.currentTime = 0
         setProgress(0)
         setActiveIndex(index)
         setPlayStatus(true)
         setCurrentTime('00:00')
+
+        if (listData.length === 1) {
+            playSong()
+        }
     }
 
     // 播放下一首
@@ -132,7 +164,6 @@ const Player = () => {
         if (index > listData.length - 1) {
             index = 0
         }
-        console.log('index', index, 'listData.length', listData.length)
         changeSong(index)
     }
 
@@ -158,8 +189,24 @@ const Player = () => {
 
     // 结束播放
     const endPlayback = () => {
-        console.log('结束播放', listData.length)
-        nextSong()
+        if (playModeRef.current === 'list') {
+            // 顺序播放模式
+            nextSong()
+        } else if (playModeRef.current === 'repeat') {
+            // 单曲循环播放模式
+            audioRef.current.currentTime = 0 // 重置音频播放时间
+            audioRef.current.play()
+        } else if (playModeRef.current === 'random') {
+            // 随机播放模式
+            if (listData.length === 1) {
+                // 单曲循环播放模式
+                audioRef.current.currentTime = 0 // 重置音频播放时间
+                audioRef.current.play()
+                return
+            }
+            const randomIndex = Math.floor(Math.random() * listData.length)
+            setActiveIndex(randomIndex)
+        }
     }
 
     // 进度条点击事件
@@ -167,6 +214,16 @@ const Player = () => {
         const audioElement = audioRef.current
         audioElement.currentTime = (progressRatio / 100) * audioElement.duration
         setCurrentTime(formatTime(audioElement.currentTime))
+    }
+
+    // 切换播放模式
+    const changeMode = () => {
+        let index = modeDataIndex + 1
+        if (index < playModeData.length) {
+            setModeDataIndex(index)
+        } else {
+            setModeDataIndex(0)
+        }
     }
 
     // 用于分页
@@ -185,7 +242,7 @@ const Player = () => {
         const audioElement = audioRef.current
         audioElement.addEventListener('ended', endPlayback)
         return () => {
-            audioElement.addEventListener('ended', endPlayback)
+            audioElement.removeEventListener('ended', endPlayback)
         }
     }, [activeIndex])
 
@@ -198,6 +255,18 @@ const Player = () => {
     useUpdateEffect(() => {
         setThemeMode(globalState.theme)
     }, [globalState.theme])
+
+    // 监听播放模式切换
+    useUpdateEffect(() => {
+        playModeRef.current = playModeData[modeDataIndex].type
+
+        MessagePlugin.info({
+            content: playModeData[modeDataIndex].title,
+            placement: 'center',
+            icon: false,
+            duration: 500,
+        })
+    }, [modeDataIndex])
 
     useEffect(() => {
         // 需要判断是否是歌单进入还是单首歌曲进入
@@ -235,10 +304,20 @@ const Player = () => {
                         handleClick={musicTimeChange}
                         changEnd={musicTimeChange}
                     />
-                    <div>{formatTime(listData[activeIndex]?.dt / 1000) || '00:00'}</div>
+                    <div>
+                        {listData[activeIndex]?.dt
+                            ? formatTime(listData[activeIndex]?.dt / 1000)
+                            : '00:00'}
+                    </div>
                 </div>
                 <div className={'flexSa'}>
-                    <IconFont name='textformat-wrap' size='30px'></IconFont>
+                    <SVG
+                        className={Style.svg}
+                        src={playModeData[modeDataIndex].src}
+                        title={playModeData[modeDataIndex].title}
+                        width={30}
+                        onClick={changeMode}
+                    />
                     <div>
                         <IconFont name='previous' size='40px' onClick={previousSong}></IconFont>
                         <IconFont
