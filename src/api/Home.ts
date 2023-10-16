@@ -17,7 +17,7 @@ export function newsong(params?: object) {
  */
 export function playlist(params: object) {
     return request({
-        url: '/top/playlist/highquality',
+        url: '/top/playlist',
         method: 'get',
         params,
     })

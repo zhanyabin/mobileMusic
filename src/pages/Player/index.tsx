@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState, useRef } from 'react'
 import _ from 'lodash'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { List, Drawer, Button, MessagePlugin } from 'tdesign-react'
+import { useLocation } from 'react-router-dom'
+import { List, Drawer, MessagePlugin } from 'tdesign-react'
 import { IconFont } from 'tdesign-icons-react'
 import wave from 'assets/images/wave.gif'
 import { useUpdateEffect } from 'ahooks'
@@ -11,10 +11,13 @@ import { useAppSelector } from 'modules/store'
 import { selectGlobal } from 'modules/global'
 import Style from './index.module.less'
 import Slider from 'components/Slider'
+import SongLyrics from './components/SongLyrics'
 import SVG from 'react-inlinesvg'
 import listLoopIcon from 'assets/images/songtab_playmode_listloop.svg'
 import shuffleIcon from 'assets/images/songtab_desktop_playmode_shuffle.svg'
 import singlecycleIcon from 'assets/images/songtab_playmode_singlecycle.svg'
+import { ISong } from './components/SongLyrics/songType'
+
 
 const playModeData: any = [
     {
@@ -36,7 +39,7 @@ const playModeData: any = [
 
 const Player = () => {
     const globalState = useAppSelector(selectGlobal)
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
     const location: any = useLocation()
     const [isLoading, setIsLoading] = useState(false)
     const [search, setSearch] = useState({
@@ -44,7 +47,7 @@ const Player = () => {
         offset: 0,
         limit: 50,
     })
-    const [listData, setListData] = useState<any>([])
+    const [listData, setListData] = useState<ISong[]>([])
     const [visible, setVisible] = useState(false)
     // 当前播放音乐的下标
     const [activeIndex, setActiveIndex] = useState(-1)
@@ -61,8 +64,8 @@ const Player = () => {
     // 进度条
     const [progress, setProgress] = useState(0)
     // 播放模式
-    const [playMode, setPlayMode] = useState('list')
-    const playModeRef = useRef(playMode)
+    // const [playMode, setPlayMode] = useState('list')
+    const playModeRef = useRef('list')
     const [modeDataIndex, setModeDataIndex] = useState(0)
 
     const styleGif: any = {
@@ -128,18 +131,12 @@ const Player = () => {
         const id = listData[activeIndex].id
         const songData = await getSongUrl(id)
         audioRef.current.src = songData.data[0]?.url
-        setPlayStatus(true)
+        // setPlayStatus(true)
         playSong()
     }
 
     const playSong = () => {
-        console.log('paley')
-        audioRef.current
-            .play()
-            .then((r) => {})
-            .catch((e) => {
-                setPlayStatus(false)
-            })
+        audioRef.current.play()
     }
 
     const pauseSong = () => {
@@ -150,7 +147,7 @@ const Player = () => {
         audioRef.current.currentTime = 0
         setProgress(0)
         setActiveIndex(index)
-        setPlayStatus(true)
+        // setPlayStatus(true)
         setCurrentTime('00:00')
 
         if (listData.length === 1) {
@@ -187,6 +184,21 @@ const Player = () => {
         }, 1000)
     }
 
+    // 根据歌曲列表长度获取对应随机数下标
+    const generateRandomIndex = (): number => {
+        // 只有一首歌的话
+        if (listData.length === 1) {
+            audioRef.current.currentTime = 0 // 重置音频播放时间
+            audioRef.current.play()
+            return 0
+        }
+        const newIndex = Math.floor(Math.random() * listData.length)
+        if (newIndex === activeIndex) {
+            return generateRandomIndex() // 递归调用，直到生成一个不同的随机下标
+        }
+        return newIndex
+    }
+
     // 结束播放
     const endPlayback = () => {
         if (playModeRef.current === 'list') {
@@ -198,13 +210,7 @@ const Player = () => {
             audioRef.current.play()
         } else if (playModeRef.current === 'random') {
             // 随机播放模式
-            if (listData.length === 1) {
-                // 单曲循环播放模式
-                audioRef.current.currentTime = 0 // 重置音频播放时间
-                audioRef.current.play()
-                return
-            }
-            const randomIndex = Math.floor(Math.random() * listData.length)
+            const randomIndex = generateRandomIndex()
             setActiveIndex(randomIndex)
         }
     }
@@ -226,6 +232,17 @@ const Player = () => {
         }
     }
 
+    const handlePauseChange = () => {
+        const audioElement = audioRef.current
+        // 因为 playStatus 判断的是播放状态。 true 为播放 false为暂停
+        // audioElement.paused 判断的是暂停状态。 true 为暂停， false 为播放，所以需要取反
+        setPlayStatus(!audioElement.paused)
+    }
+
+    const handlePlay = () => {
+        setPlayStatus(true)
+    }
+
     // 用于分页
     useUpdateEffect(() => {
         getSongList()
@@ -234,11 +251,6 @@ const Player = () => {
     // 当前选中歌曲变更时加载歌曲
     useUpdateEffect(() => {
         loadSong()
-            .then((r) => {})
-            .catch((err) => {
-                console.log('err', err)
-            })
-
         const audioElement = audioRef.current
         audioElement.addEventListener('ended', endPlayback)
         return () => {
@@ -279,22 +291,21 @@ const Player = () => {
 
         const audioElement = audioRef.current
         audioElement.addEventListener('canplay', handleCanPlay)
+        audioElement.addEventListener('play', handlePlay)
+        audioElement.addEventListener('pause', handlePauseChange)
         return () => {
             audioRef.current.pause()
             audioRef.current.src = ''
             audioElement.removeEventListener('canplay', handleCanPlay)
+            audioElement.removeEventListener('play', handlePlay)
+            audioElement.removeEventListener('pause', handlePauseChange)
             clearInterval(intervalRef.current)
         }
     }, [])
 
     return (
         <div>
-            <Button
-                onClick={() => {
-                    setVisible(true)
-                }}>
-                打开
-            </Button>
+            <SongLyrics songInfo={listData[activeIndex]} />
             <div className={`${Style.footer}`}>
                 <div className={`flexSb ${Style.slider}`}>
                     <div>{currentTime}</div>
