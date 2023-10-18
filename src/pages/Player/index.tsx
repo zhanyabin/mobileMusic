@@ -130,6 +130,11 @@ const Player = () => {
     const loadSong = async () => {
         const id = listData[activeIndex].id
         const songData = await getSongUrl(id)
+        if (!songData.data[0]?.url) {
+            alert('无法获取到播放源自动切换到下一首')
+            nextSong()
+            return
+        }
         audioRef.current.src = songData.data[0]?.url
         // setPlayStatus(true)
         playSong()
@@ -305,7 +310,7 @@ const Player = () => {
 
     return (
         <div>
-            <SongLyrics songInfo={listData[activeIndex]} />
+            <SongLyrics songInfo={listData[activeIndex]} isPlay={playStatus} />
             <div className={`${Style.footer}`}>
                 <div className={`flexSb ${Style.slider}`}>
                     <div>{currentTime}</div>

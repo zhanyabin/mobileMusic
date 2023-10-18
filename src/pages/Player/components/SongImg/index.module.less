@@ -1,0 +1,69 @@
+.imgBox {
+    text-align: center;
+    position: relative;
+    margin-top: 45px;
+    .mask1 {
+        width: 180px;
+        height: 180px;
+        padding: 10px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.2);
+        box-sizing: border-box;
+        display: inline-block;
+
+        .mask2 {
+            width: 100%;
+            height: 100%;
+            background: rgb(0, 0, 0);
+            background: linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.896796218487395) 0%,
+                rgba(51, 51, 51, 0.6502976190476191) 50%,
+                rgba(0, 0, 0, 1) 100%
+            );
+            padding: 20px;
+            border-radius: 50%;
+            box-sizing: border-box;
+
+            .img {
+                width: 100%;
+                height: 100%;
+                display: inline-block;
+            }
+
+            .infiniteSpins {
+                animation: rotateAnimation 10s linear infinite both;
+                //animation-fill-mode: both;
+            }
+
+            .infiniteSpinsPaused {
+                animation-play-state: paused;
+            }
+
+            @keyframes rotateAnimation {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        }
+    }
+
+    .op {
+        width: 55px;
+        position: absolute;
+        left: 48%;
+        top: -40px;
+        background: none;
+        transform-origin: top left;
+        transition: transform 0.3s ease;
+        transform: rotate(-30deg);
+    }
+
+    .rotate {
+        transform: rotate(-5deg);
+    }
+}
