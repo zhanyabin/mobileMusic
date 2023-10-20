@@ -11,9 +11,9 @@ import './styles/index.less'
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <Provider store={store}>
         <HashRouter>
-            <React.StrictMode>
+            {/*<React.StrictMode>*/}
                 <App />
-            </React.StrictMode>
+            {/*</React.StrictMode>*/}
         </HashRouter>
     </Provider>,
 )

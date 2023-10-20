@@ -1,18 +1,52 @@
 .songBox {
     width: 100%;
     height: calc(100vh - var(--td-comp-size-xxxl));
-
+    color: white;
+    .mask {
+        width: 100%;
+        height: calc(100vh - var(--td-comp-size-xxxl));
+        background: rgba(0, 0, 0, .4);
+        position: absolute;
+        top: var(--td-comp-size-xxxl);
+        left: 0;
+        pointer-events: none;
+        z-index: 1;
+    }
     .SongInfo {
         text-align: center;
+        padding-top: 16px;
+        position: relative;
+        z-index: 2;
+
+        .title {
+            font-size: 16px;
+            font-weight: bold;
+        }
     }
 
     .imgBox {
         text-align: center;
+        position: relative;
+        z-index: 2;
 
         .img {
             width: 150px;
             height: 150px;
             display: inline-block;
+        }
+    }
+
+    .lyricsBox {
+        margin-top: 16px;
+        position: relative;
+        text-align: center;
+        z-index: 2;
+        height: 300px;
+        overflow: hidden;
+        -webkit-mask-image: linear-gradient(180deg, hsla(0, 0%, 100%, 0) 0, hsla(0, 0%, 100%, .6) 15%, #fff 25%, #fff 75%, hsla(0, 0%, 100%, .6) 85%, hsla(0, 0%, 100%, 0));
+        user-select: none;
+        p {
+            margin: 0;
         }
     }
 }

@@ -31,7 +31,7 @@ const Recommend = (props: Interface) => {
             onClick={() => {
                 openPage(item.id, item.trackCount)
             }}>
-            <Image fit={'cover'} shape={'round'} src={item.coverImgUrl} />
+            <Image fit={'cover'} shape={'round'} src={item.coverImgUrl + '?param=100y100'} />
             <div className={Style.text}>{item.name}</div>
         </div>
     ))

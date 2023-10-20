@@ -335,17 +335,19 @@ const Player = () => {
                         onClick={changeMode}
                     />
                     <div>
-                        <IconFont name='previous' size='40px' onClick={previousSong}></IconFont>
+                        <IconFont className={Style.iconFont} name='previous' size='40px' onClick={previousSong}></IconFont>
                         <IconFont
+                            className={Style.iconFont}
                             onClick={() => {
                                 setPlayStatus(!playStatus)
                             }}
                             name={playStatus ? 'pause-circle' : 'play-circle'}
                             size='60px'
                             style={{ margin: '0 15px' }}></IconFont>
-                        <IconFont name='next' size='40px' onClick={nextSong}></IconFont>
+                        <IconFont className={Style.iconFont} name='next' size='40px' onClick={nextSong}></IconFont>
                     </div>
                     <IconFont
+                        className={Style.iconFont}
                         name='form'
                         size='30px'
                         onClick={() => {
