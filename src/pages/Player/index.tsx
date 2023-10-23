@@ -18,7 +18,6 @@ import shuffleIcon from 'assets/images/songtab_desktop_playmode_shuffle.svg'
 import singlecycleIcon from 'assets/images/songtab_playmode_singlecycle.svg'
 import { ISong } from './components/SongLyrics/songType'
 
-
 const playModeData: any = [
     {
         src: listLoopIcon,
@@ -310,7 +309,11 @@ const Player = () => {
 
     return (
         <div>
-            <SongLyrics songInfo={listData[activeIndex]} isPlay={playStatus} />
+            <SongLyrics
+                songInfo={listData[activeIndex]}
+                isPlay={playStatus}
+                currentTime={currentTime}
+            />
             <div className={`${Style.footer}`}>
                 <div className={`flexSb ${Style.slider}`}>
                     <div>{currentTime}</div>
@@ -335,7 +338,11 @@ const Player = () => {
                         onClick={changeMode}
                     />
                     <div>
-                        <IconFont className={Style.iconFont} name='previous' size='40px' onClick={previousSong}></IconFont>
+                        <IconFont
+                            className={Style.iconFont}
+                            name='previous'
+                            size='40px'
+                            onClick={previousSong}></IconFont>
                         <IconFont
                             className={Style.iconFont}
                             onClick={() => {
@@ -344,7 +351,11 @@ const Player = () => {
                             name={playStatus ? 'pause-circle' : 'play-circle'}
                             size='60px'
                             style={{ margin: '0 15px' }}></IconFont>
-                        <IconFont className={Style.iconFont} name='next' size='40px' onClick={nextSong}></IconFont>
+                        <IconFont
+                            className={Style.iconFont}
+                            name='next'
+                            size='40px'
+                            onClick={nextSong}></IconFont>
                     </div>
                     <IconFont
                         className={Style.iconFont}
