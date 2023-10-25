@@ -2,7 +2,6 @@
 import { Navigate } from 'react-router-dom'
 import Home from 'pages/Home'
 import My from 'pages/My'
-import Login from 'pages/Login'
 import NotFound from 'pages/NotFound'
 import Player from 'pages/Player'
 
@@ -49,18 +48,9 @@ const routes: Array<Router> = [
         path: '/player',
         meta: {
             title: '播放器',
-            hidden: false,
-        },
-        element: <Player />,
-    },
-    {
-        name: 'login',
-        meta: {
-            title: '登录',
             hidden: true,
         },
-        path: '/login',
-        element: <Login />,
+        element: <Player />,
     },
     {
         path: '*',

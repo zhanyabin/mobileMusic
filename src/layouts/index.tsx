@@ -7,6 +7,7 @@ import { selectGlobal, toggleSetting } from 'modules/global'
 import { Drawer } from 'tdesign-react'
 import Nav from './components/Nav'
 import Setting from './components/Setting'
+import Style from './index.module.less'
 
 const { Header, Content, Footer } = Layout
 
@@ -15,7 +16,7 @@ export default memo(() => {
     const globalState = useAppSelector(selectGlobal)
     const element = useRoutes(routers)
     return (
-        <Layout style={{ height: '100vh' }}>
+        <Layout className={Style.layoutMain}>
             <Header>
                 <Nav />
             </Header>

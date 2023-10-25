@@ -308,7 +308,7 @@ const Player = () => {
     }, [])
 
     return (
-        <div>
+        <>
             <SongLyrics
                 songInfo={listData[activeIndex]}
                 isPlay={playStatus}
@@ -412,7 +412,7 @@ const Player = () => {
                     ))}
                 </List>
             </Drawer>
-        </div>
+        </>
     )
 }
 
