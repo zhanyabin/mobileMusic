@@ -136,7 +136,7 @@ const SongLyrics = (props: Interface) => {
                         {lyricDom}
                     </div>
                 </div>
-                <div className={Style.mask}></div>
+                <div className={Style.mask} style={{height: `calc(${window.innerHeight}px - var(--td-comp-size-xxxl))`}}></div>
             </div>
         </>
     )

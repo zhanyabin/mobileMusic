@@ -16,8 +16,8 @@ const Ranking = (props: Interface) => {
     const { data } = props
     const style: any = {
         position: 'absolute',
-        insetInlineEnd: 15,
-        insetBlockEnd: 15,
+        insetInlineEnd: 20,
+        insetBlockEnd: 60,
     }
 
     const listWrapStyle: any = {
@@ -37,7 +37,7 @@ const Ranking = (props: Interface) => {
         })
     }
     return (
-        <div>
+        <>
             <div className={Style.topBlock}>
                 <img src={indexIcon} alt='' />
                 <div className={Style.description}>{data.description}</div>
@@ -74,7 +74,7 @@ const Ranking = (props: Interface) => {
                 container={() => container}
                 visibleHeight={46}
                 style={style}></BackTop>
-        </div>
+        </>
     )
 }
 

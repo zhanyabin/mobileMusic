@@ -15,12 +15,18 @@ export default memo(() => {
     const dispatch = useAppDispatch()
     const globalState = useAppSelector(selectGlobal)
     const element = useRoutes(routers)
+
+
+    useEffect(() => {
+
+    }, [])
+
     return (
-        <Layout className={Style.layoutMain}>
+        <Layout className={Style.layoutMain} style={{height: window.innerHeight + 'px'}}>
             <Header>
                 <Nav />
             </Header>
-            <Content>
+            <Content style={{height: `calc(${window.innerHeight}px - var(--td-comp-size-xxxl))`}}>
                 <Suspense fallback={<div>loading...</div>}>{element}</Suspense>
             </Content>
             {/*<Footer>底部</Footer>*/}
