@@ -7,7 +7,7 @@
         width: 100%;
         //height: calc(100vh - var(--td-comp-size-xxxl));
         height: 100%;
-        background: rgba(0, 0, 0, .4);
+        background: rgba(0, 0, 0, 0.4);
         position: absolute;
         top: var(--td-comp-size-xxxl);
         left: 0;
@@ -39,26 +39,36 @@
     }
 
     .lyricsBox {
+        height: 30%;
+        padding: 0 16px;
+        box-sizing: border-box;
         margin-top: 16px;
         position: relative;
         text-align: center;
         z-index: 2;
-        //height: 300px;
-        height: 30%;
         overflow: hidden;
-        -webkit-mask-image: linear-gradient(180deg, hsla(0, 0%, 100%, 0) 0, hsla(0, 0%, 100%, .6) 15%, #fff 25%, #fff 75%, hsla(0, 0%, 100%, .6) 85%, hsla(0, 0%, 100%, 0));
+        -webkit-mask-image: linear-gradient(
+            180deg,
+            hsla(0, 0%, 100%, 0) 0,
+            hsla(0, 0%, 100%, 0.4) 15%,
+            #fff 25%,
+            #fff 75%,
+            hsla(0, 0%, 100%, 0.4) 85%,
+            hsla(0, 0%, 100%, 0)
+        );
         user-select: none;
         p {
-            margin: 0;
+            margin: 0 0 16px;
+            line-height: 20px;
+            color: rgba(255, 255, 255, 0.8);
         }
 
-      .on {
-        color: var(--td-brand-color);
-      }
+        .on {
+            color: var(--td-brand-color);
+        }
     }
 
     .songLyricBoxInner {
-        line-height: 34px;
         transition: transform 0.1s ease-out 0s;
         transform: translateY(100px);
     }

@@ -4,6 +4,7 @@ import { CHART_COLORS, defaultColor } from 'configs/color'
 import { generateColorMap, insertThemeStylesheet } from 'utils/color'
 import { ETheme } from 'types/index.d'
 import { Color } from 'tvision-color'
+import { IUserInfo } from 'types/user'
 
 const namespace = 'global'
 
@@ -13,6 +14,8 @@ export interface IGlobalState {
     color: string
     // 是否显示个人中心弹窗
     setting: boolean
+    // 用户信息
+    userInfo: IUserInfo | object
 }
 
 const defaultTheme = ETheme.light
@@ -21,6 +24,7 @@ const initialState: IGlobalState = {
     theme: defaultTheme,
     color: defaultColor?.[0],
     setting: false,
+    userInfo: {}
 }
 
 // 创建带有命名空间的reducer
@@ -55,10 +59,13 @@ const globalSlice = createSlice({
         toggleSetting: (state) => {
             state.setting = !state.setting
         },
+        changeUserInfo: (state, action) => {
+            state.userInfo = action.payload
+        }
     },
 })
 
-export const { switchTheme, switchColor, toggleSetting } = globalSlice.actions
+export const { switchTheme, switchColor, toggleSetting, changeUserInfo } = globalSlice.actions
 
 export const selectGlobal = (state: RootState) => state.global
 

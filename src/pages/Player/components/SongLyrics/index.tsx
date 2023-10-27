@@ -24,7 +24,7 @@ const formatTime = (time: string) => {
     return Number(time1) * 60 + Number(time2)
 }
 
-const defaultHeight = 80
+const defaultHeight = 110
 
 const SongLyrics = (props: Interface) => {
     const { songInfo, isPlay, currentTime } = props
@@ -86,7 +86,7 @@ const SongLyrics = (props: Interface) => {
 
     // 根据当前播放时间和歌词数据里面的time时间做匹配
     const getActiveLyricId = (time: number) => {
-        let translate = 0
+        let translate = defaultHeight
         // 处理一下拖动进度条时需要快速定位的问题
         if (time < 3) {
             setTranslateHeight(defaultHeight)
@@ -95,15 +95,18 @@ const SongLyrics = (props: Interface) => {
             if (time > Math.trunc(item.time)) {
                 setActiveLyricId(item.id)
                 let lyricDom = document.querySelectorAll('.lyricItem')
-                let height = window.getComputedStyle(lyricDom[index], null).height
-                let h: number = Number(height.slice(0, -2))
-
-                if (index > 3) {
-                    translate += h
-                    setTranslateHeight(-translate)
-                } else {
-                    setTranslateHeight(defaultHeight)
+                let h = 0
+                for (let i = 0; i < index; i++) {
+                    const height = window.getComputedStyle(lyricDom[i], null).height
+                    const marginBottom = window.getComputedStyle(lyricDom[i], null).marginBottom
+                    const he = Number(height.slice(0, -2))
+                    const m = Number(marginBottom.slice(0, -2))
+                    const totalHeight = he + m
+                    console.log('height', height)
+                    h += totalHeight
                 }
+                translate = h - defaultHeight
+                setTranslateHeight(-translate)
             }
         })
     }

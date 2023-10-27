@@ -15,12 +15,12 @@ service.interceptors.request.use(
         if (config.method === 'get') {
             config.params = {
                 ...config.params,
-                realIP: randomIp()
+                // realIP: randomIp()
             }
         } else if (config.method === 'post') {
             config.data = {
                 ...config.data,
-                realIP: randomIp(),
+                // realIP: randomIp(),
                 _timestamp: new Date().getTime()
             }
         }
