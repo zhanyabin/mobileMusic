@@ -53,3 +53,15 @@ export function getUserDetail(uid: number) {
         method: 'get'
     })
 }
+
+// 获取用户歌单
+export function getUserPlayList(uid: number) {
+    return request({
+        params: {
+            // timestamp: new Date().getTime(),
+            uid
+        },
+        url: 'user/playlist',
+        method: 'get'
+    })
+}

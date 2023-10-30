@@ -24,7 +24,7 @@ const LoginDrawer = (props: Interface) => {
             const loginData = await login(fields)
             if (loginData.code === 200) {
                 await MessagePlugin.success('提交成功')
-                onSuccess()
+                onSuccess(loginData?.account?.id)
             }
         }
     }
