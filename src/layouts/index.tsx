@@ -37,7 +37,7 @@ export default memo(() => {
             <Header>
                 <Nav />
             </Header>
-            <Content style={{height: `calc(${window.innerHeight}px - var(--td-comp-size-xxxl))`}}>
+            <Content style={{height: `calc(${window.innerHeight}px - var(--td-comp-size-xxxl))`, overflow: 'scroll'}}>
                 <Suspense fallback={<div>loading...</div>}>{element}</Suspense>
             </Content>
             {/*<Footer>底部</Footer>*/}

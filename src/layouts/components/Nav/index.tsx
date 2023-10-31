@@ -8,6 +8,11 @@ import Logo from 'assets/images/logo.png'
 import Style from 'layouts/index.module.less'
 import { defaultColor } from 'configs/color'
 
+const imgStyle = {
+    width: '100px',
+    height: '56px',
+}
+
 const Nav = () => {
     const dispatch = useAppDispatch()
     const [status, setStatus] = useState(false)
@@ -22,7 +27,15 @@ const Nav = () => {
     }, [status])
     return (
         <div className={Style.navBox + ' flexSb'}>
-            <Image className={Style.logo} src={Logo} fit={'contain'} />
+            <div className={Style.logBox + ' flexStart'}>
+                <Image
+                    className={Style.logo}
+                    src={Logo}
+                    fit={'cover'}
+                    placeholder={<div style={imgStyle}></div>}
+                />
+                <h3>绅士音乐</h3>
+            </div>
             <Button shape='square' variant='outline' onClick={toggleSettingPanel}>
                 <UserIcon />
             </Button>

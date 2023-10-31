@@ -10,6 +10,12 @@ interface Interface {
     newSongList: Array<any>
 }
 
+const imgStyle = {
+    width: '100px',
+    height: '100px',
+    borderRadius: '8px',
+}
+
 const Recommend = (props: Interface) => {
     const { list, newSongList } = props
     const navigate = useNavigate()
@@ -31,7 +37,13 @@ const Recommend = (props: Interface) => {
             onClick={() => {
                 openPage(item.id, item.trackCount)
             }}>
-            <Image fit={'cover'} shape={'round'} src={item.coverImgUrl + '?param=100y100'} />
+            <Image
+                fit={'cover'}
+                shape={'round'}
+                src={item.coverImgUrl + '?param=100y100'}
+                style={imgStyle}
+                placeholder={<div style={imgStyle}></div>}
+            />
             <div className={Style.text}>{item.name}</div>
         </div>
     ))

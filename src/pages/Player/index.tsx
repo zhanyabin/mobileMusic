@@ -2,7 +2,6 @@ import React, { memo, useEffect, useState, useRef } from 'react'
 import _ from 'lodash'
 import { useLocation } from 'react-router-dom'
 import { List, Drawer, MessagePlugin } from 'tdesign-react'
-import { IconFont } from 'tdesign-icons-react'
 import wave from 'assets/images/wave.gif'
 import { useUpdateEffect } from 'ahooks'
 import { getPlayListAll } from 'api/Home'
@@ -17,6 +16,13 @@ import listLoopIcon from 'assets/images/songtab_playmode_listloop.svg'
 import shuffleIcon from 'assets/images/songtab_desktop_playmode_shuffle.svg'
 import singlecycleIcon from 'assets/images/songtab_playmode_singlecycle.svg'
 import { ISong } from './components/SongLyrics/songType'
+import {
+    PreviousIcon,
+    PauseCircleIcon,
+    PlayCircleIcon,
+    NextIcon,
+    FormIcon,
+} from 'tdesign-icons-react'
 
 const playModeData: any = [
     {
@@ -129,6 +135,7 @@ const Player = () => {
     const loadSong = async () => {
         const id = listData[activeIndex].id
         const songData = await getSongUrl(id)
+        console.log('songData', songData)
         if (!songData.data[0]?.url) {
             alert('无法获取到播放源自动切换到下一首')
             nextSong()
@@ -330,40 +337,58 @@ const Player = () => {
                     </div>
                 </div>
                 <div className={'flexSa'}>
-                    <SVG
-                        className={Style.svg}
-                        src={playModeData[modeDataIndex].src}
-                        title={playModeData[modeDataIndex].title}
-                        width={30}
-                        onClick={changeMode}
-                    />
+                    <div className={Style.svg}>
+                        <SVG
+                            className={Style.svg}
+                            src={playModeData[modeDataIndex].src}
+                            title={playModeData[modeDataIndex].title}
+                            width={30}
+                            onClick={changeMode}
+                        />
+                    </div>
                     <div>
-                        <IconFont
+                        <PreviousIcon
                             className={Style.iconFont}
                             name='previous'
                             size='40px'
-                            onClick={previousSong}></IconFont>
-                        <IconFont
-                            className={Style.iconFont}
-                            onClick={() => {
-                                setPlayStatus(!playStatus)
-                            }}
-                            name={playStatus ? 'pause-circle' : 'play-circle'}
-                            size='60px'
-                            style={{ margin: '0 15px' }}></IconFont>
-                        <IconFont
+                            onClick={previousSong}
+                        />
+                        {playStatus ? (
+                            <PauseCircleIcon
+                                className={Style.iconFont}
+                                onClick={() => {
+                                    setPlayStatus(!playStatus)
+                                }}
+                                name={playStatus ? 'pause-circle' : 'play-circle'}
+                                size='60px'
+                                style={{ margin: '0 15px' }}
+                            />
+                        ) : (
+                            <PlayCircleIcon
+                                className={Style.iconFont}
+                                onClick={() => {
+                                    setPlayStatus(!playStatus)
+                                }}
+                                name={playStatus ? 'pause-circle' : 'play-circle'}
+                                size='60px'
+                                style={{ margin: '0 15px' }}
+                            />
+                        )}
+                        <NextIcon
                             className={Style.iconFont}
                             name='next'
                             size='40px'
-                            onClick={nextSong}></IconFont>
+                            onClick={nextSong}
+                        />
                     </div>
-                    <IconFont
+                    <FormIcon
                         className={Style.iconFont}
                         name='form'
                         size='30px'
                         onClick={() => {
                             setVisible(true)
-                        }}></IconFont>
+                        }}
+                    />
                 </div>
             </div>
             <Drawer
@@ -389,7 +414,6 @@ const Player = () => {
                             onClick={() => {
                                 changeSong(index)
                             }}>
-                            {/*<div className={Style.index}>{index + 1}</div>*/}
                             <div className={Style.index}>
                                 {activeIndex === index && playStatus ? (
                                     <img

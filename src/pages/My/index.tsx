@@ -13,6 +13,12 @@ import { IUserInfo } from 'types/user'
 import { useUpdateEffect } from 'ahooks'
 import { useNavigate } from 'react-router-dom'
 
+const imgStyle = {
+    width: '80px',
+    height: '80px',
+    borderRadius: '8px',
+}
+
 const My = () => {
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
@@ -61,6 +67,27 @@ const My = () => {
         closeLoginDrawer()
     }
 
+    const songList = collectList.map((item: any) => (
+        <div
+            className={`${Style.songBox} flexStart`}
+            key={item.id}
+            onClick={() => {
+                openPage(item.id, item.trackCount)
+            }}>
+            <Image
+                className={Style.likeImg}
+                fit={'fill'}
+                shape={'round'}
+                src={item.coverImgUrl}
+                placeholder={<div style={imgStyle}></div>}
+            ></Image>
+            <div>
+                <div className={Style.likeName}>{item.name}</div>
+                <div className={Style.likeTrackCount}>{item.trackCount || 0}首</div>
+            </div>
+        </div>
+    ))
+
     useEffect(() => {
         getUserPlayListEvent()
     }, [userInfo])
@@ -81,23 +108,46 @@ const My = () => {
             </div>
             <div className={Style.myBox}>
                 {!_.isEmpty(userInfo) ? (
-                    <div
-                        className={`${Style.myLike} flexStart`}
-                        onClick={() => {
-                            openPage(musicILike.id, musicILike.trackCount)
-                        }}>
-                        <Image
-                            className={Style.likeImg}
-                            fit={'fill'}
-                            shape={'round'}
-                            src={musicILike.coverImgUrl}></Image>
-                        <div>
-                            <div className={Style.likeName}>我喜欢的音乐</div>
-                            <div className={Style.likeTrackCount}>
-                                {musicILike.trackCount || 0}首
+                    <>
+                        <div
+                            className={`${Style.myLike} flexStart`}
+                            onClick={() => {
+                                openPage(musicILike.id, musicILike.trackCount)
+                            }}>
+                            <Image
+                                className={Style.likeImg}
+                                fit={'fill'}
+                                shape={'round'}
+                                src={musicILike.coverImgUrl}
+                                placeholder={<div style={imgStyle}></div>}></Image>
+                            <div>
+                                <div className={Style.likeName}>我喜欢的音乐</div>
+                                <div className={Style.likeTrackCount}>
+                                    {musicILike.trackCount || 0}首
+                                </div>
                             </div>
                         </div>
-                    </div>
+
+                        <div className={`${Style.myLike}`}>
+                            <div className={Style.title}>
+                                创建歌单 ({collectList.length || 0}个)
+                            </div>
+                            {songList}
+                            {/*<div className={'flexStart'}>*/}
+                            {/*    <Image*/}
+                            {/*        className={Style.likeImg}*/}
+                            {/*        fit={'fill'}*/}
+                            {/*        shape={'round'}*/}
+                            {/*        src={musicILike.coverImgUrl}></Image>*/}
+                            {/*    <div>*/}
+                            {/*        <div className={Style.likeName}>我喜欢的音乐</div>*/}
+                            {/*        <div className={Style.likeTrackCount}>*/}
+                            {/*            {musicILike.trackCount || 0}首*/}
+                            {/*        </div>*/}
+                            {/*    </div>*/}
+                            {/*</div>*/}
+                        </div>
+                    </>
                 ) : (
                     <Button theme={'primary'} block shape={'round'} onClick={openLoginDrawer}>
                         登录
