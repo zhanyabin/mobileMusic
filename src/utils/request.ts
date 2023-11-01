@@ -1,13 +1,13 @@
 import axios, { AxiosInstance } from 'axios'
 import {  MessagePlugin } from 'tdesign-react';
 
-const randomIp = () => Array(4).fill(0).map((_, i) => Math.floor(Math.random() * 255) + (i === 0 ? 1 : 0)).join('.');
-
 
 const service: AxiosInstance = axios.create({
-    baseURL: '/api',
+    baseURL: process.env.NODE_ENV === 'development' ? '/api' : '',
     timeout: 5000,
 })
+
+console.log(process.env.NODE_ENV)
 
 service.interceptors.request.use(
     config => {
@@ -15,7 +15,6 @@ service.interceptors.request.use(
         if (config.method === 'get') {
             config.params = {
                 ...config.params,
-                // realIP: randomIp()
             }
         } else if (config.method === 'post') {
             config.data = {
