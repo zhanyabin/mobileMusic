@@ -97,6 +97,7 @@ const SongLyrics = (props: Interface) => {
                 let lyricDom = document.querySelectorAll('.lyricItem')
                 let h = 0
                 for (let i = 0; i < index; i++) {
+                    // 获取到当前播放位置之前所有的高度相加，然后加上下边距就是需要偏移的距离
                     const height = window.getComputedStyle(lyricDom[i], null).height
                     const marginBottom = window.getComputedStyle(lyricDom[i], null).marginBottom
                     const he = Number(height.slice(0, -2))
