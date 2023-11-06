@@ -7,8 +7,6 @@ const service: AxiosInstance = axios.create({
     timeout: 5000,
 })
 
-console.log(process.env.NODE_ENV)
-
 service.interceptors.request.use(
     config => {
         // 后端规定每次post请求需要增加时间戳，否则接口会被缓存

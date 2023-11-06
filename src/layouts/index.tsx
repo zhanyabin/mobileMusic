@@ -20,9 +20,9 @@ export default memo(() => {
     const getLoginStatus = async () => {
         const { data } = await loginStatus()
         // 判断是否是匿名用户
-        const anonimousUser = data.account.anonimousUser
-        if (!anonimousUser) {
-            const id = data.account.id
+        const anonimousUser = data?.account?.anonimousUser
+        const id = data?.account?.id
+        if (!anonimousUser && id) {
             const userData = await getUserDetail(id)
             dispatch(changeUserInfo(userData))
         }
