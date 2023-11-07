@@ -8,6 +8,9 @@ export default defineConfig({
         host: '0.0.0.0',
         proxy: {
             '/api': {
+                // 本地
+                // target: 'http://localhost:3000/',
+                // 线上
                 target: 'https://service-eq8476me-1322095897.gz.apigw.tencentcs.com/',
                 changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/api/, '')

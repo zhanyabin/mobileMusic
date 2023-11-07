@@ -36,7 +36,10 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     response => {
         const res = response.data
-        if (res.code !== 200 && res.code) {
+        // 接口请求成功200
+        //  轮询此接口可获取二维码扫码状态,800 为二维码过期,801 为等待扫码,802 为待确认,803 为授权登录成功(803 状态码下会返回 cookies),
+        const codes = [200, 800, 801, 802,  803]
+        if (!codes.includes(res.code) && res.code) {
             MessagePlugin.error(res.message || res.codeMessage || 'Error', 3000).then()
             return Promise.reject(new Error(res.message || res.codeMessage  || 'Error'))
         } else {

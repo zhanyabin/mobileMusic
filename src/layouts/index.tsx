@@ -22,7 +22,7 @@ export default memo(() => {
         // 判断是否是匿名用户
         const anonimousUser = data?.account?.anonimousUser
         const id = data?.account?.id
-        if (!anonimousUser && id) {
+        if (!anonimousUser && id && data?.profile?.userId !== 8949024981) {
             const userData = await getUserDetail(id)
             dispatch(changeUserInfo(userData))
         }

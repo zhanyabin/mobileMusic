@@ -81,7 +81,7 @@ const My = () => {
                 src={item.coverImgUrl}
                 placeholder={<div style={imgStyle}></div>}
             ></Image>
-            <div>
+            <div className={Style.rightBox}>
                 <div className={Style.likeName}>{item.name}</div>
                 <div className={Style.likeTrackCount}>{item.trackCount || 0}首</div>
             </div>

@@ -65,3 +65,38 @@ export function getUserPlayList(uid: number) {
         method: 'get'
     })
 }
+
+
+// 二维码登录-key生成接口
+export function getQrKey() {
+    return request({
+        url: `/login/qr/key?timestamp=${new Date().getTime()}`,
+        method: 'get',
+    })
+}
+
+// 二维码登录-二维码生成接口
+export function createQrUrl(key: string) {
+    return request({
+        params: {
+            key,
+            qrimg: true,
+            timestamp: new Date().getTime()
+        },
+        url: '/login/qr/create',
+        method: 'get'
+    })
+}
+
+// 二维码登录-二维码检测扫码状态接口
+export function checkQr(key: string) {
+    return request({
+        params: {
+            key,
+            noCookie: true,
+            timestamp: new Date().getTime()
+        },
+        url: '/login/qr/check',
+        method: 'get'
+    })
+}
