@@ -1,4 +1,5 @@
 import request from 'utils/request'
+import { getToken } from 'utils/auth'
 
 // 登陆
 export function login(data: { phone: string,  password: string}) {
@@ -90,10 +91,11 @@ export function createQrUrl(key: string) {
 
 // 二维码登录-二维码检测扫码状态接口
 export function checkQr(key: string) {
+    const token = getToken()
     return request({
         params: {
             key,
-            noCookie: true,
+            noCookie: !token,
             timestamp: new Date().getTime()
         },
         url: '/login/qr/check',

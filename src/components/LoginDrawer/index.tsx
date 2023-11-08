@@ -4,6 +4,8 @@ import { UserIcon, LockOnIcon } from 'tdesign-icons-react'
 import { login, getQrKey, createQrUrl, checkQr, loginStatus } from 'api/Login'
 import { useUpdateEffect } from 'ahooks'
 import Style from './index.module.less'
+import { setToken } from 'utils/auth'
+import _ from 'lodash'
 
 interface Interface {
     // 控制弹窗关闭/开启
@@ -87,9 +89,12 @@ const LoginDrawer = (props: Interface) => {
                         clearInterval(timer.current as NodeJS.Timeout)
                     } else if(res.code === 803) {
                         clearInterval(timer.current as NodeJS.Timeout)
+                        let pairs = res?.cookie.split(';')
+                        let obj = _.fromPairs(pairs.map((pair: any) => pair.split('=')))
+                        setToken(obj.MUSIC_U)
                         MessagePlugin.success('登录成功')
                         loginStatus().then(res => {
-                            onSuccess(res.profile.userId)
+                            onSuccess(res.data.profile.userId)
                         })
                     }
 
