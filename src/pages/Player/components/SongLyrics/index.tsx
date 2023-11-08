@@ -1,15 +1,16 @@
-import React, { memo, useState, useRef } from 'react'
+import React, {memo, useState, useRef, useEffect} from 'react'
 import Style from './index.module.less'
 import { useUpdateEffect } from 'ahooks'
 import { ILyric, ISong } from './songType'
 import { getMusicLyric } from 'api/Player'
 import SongImg from '../SongImg'
 import ColorThief from 'colorthief'
+import _ from 'lodash'
 
 interface Interface {
     songInfo: ISong
     isPlay: boolean
-    currentTime: string
+    currentTime: number
 }
 
 interface lyricInterface {
@@ -18,16 +19,10 @@ interface lyricInterface {
     value: string
 }
 
-const formatTime = (time: string) => {
-    if (!time.includes(':')) Error('格式错误，时间格式需要为 mm:ss')
-    let [time1, time2] = time.split(':')
-    return Number(time1) * 60 + Number(time2)
-}
-
 const defaultHeight = 110
 
 const SongLyrics = (props: Interface) => {
-    const { songInfo, isPlay, currentTime } = props
+    const { songInfo, isPlay, currentTime} = props
     const [lyricData, setLyricData] = useState<[lyricInterface] | any>([])
     const [bgColor, setBgColor] = useState('')
     const [activeLyricId, setActiveLyricId] = useState('')
@@ -44,7 +39,8 @@ const SongLyrics = (props: Interface) => {
             let secTime = Number(time.split(':')[1])
             let time1 = minTime + secTime
             let value = item.slice(1).split(']')[1]
-            if (time1 > 0 && value) {
+            value = _.trim(value)
+            if (time1 > 0 && value !== '') {
                 let o = {
                     id: `lyric${index}`,
                     time: time1,
@@ -91,8 +87,12 @@ const SongLyrics = (props: Interface) => {
         if (time < 3) {
             setTranslateHeight(defaultHeight)
         }
+        // 判断一下如果播放时间小于第一句歌词的时间戳时，清空高亮id
+        if (time < lyricData[0].time) {
+            setActiveLyricId('')
+        }
         lyricData.forEach((item: lyricInterface, index: number) => {
-            if (time > Math.trunc(item.time)) {
+            if (time > item.time) {
                 setActiveLyricId(item.id)
                 let lyricDom = document.querySelectorAll('.lyricItem')
                 let h = 0
@@ -103,7 +103,6 @@ const SongLyrics = (props: Interface) => {
                     const he = Number(height.slice(0, -2))
                     const m = Number(marginBottom.slice(0, -2))
                     const totalHeight = he + m
-                    console.log('height', height)
                     h += totalHeight
                 }
                 translate = h - defaultHeight
@@ -119,8 +118,7 @@ const SongLyrics = (props: Interface) => {
     }, [songInfo?.id])
 
     useUpdateEffect(() => {
-        const time = formatTime(currentTime)
-        getActiveLyricId(time)
+        getActiveLyricId(currentTime)
     }, [currentTime])
 
     return (

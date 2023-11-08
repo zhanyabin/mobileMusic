@@ -57,19 +57,19 @@ const Player = () => {
     // 当前播放音乐的下标
     const [activeIndex, setActiveIndex] = useState(-1)
     // 获取音乐控件
-    const audioRef = useRef(new Audio(''))
+    const audioRef = useRef<HTMLAudioElement>(new Audio(''))
     // 控制播放状态
     const [playStatus, setPlayStatus] = useState(false)
     // 查看光暗模式切换
     const [themeMode, setThemeMode] = useState(globalState.theme)
     // 获取当前播放时间
     const [currentTime, setCurrentTime] = useState('00:00')
+    const [currentTimeNumber, setCurrentTimeNumber] = useState(0)
+
     // 定时器
     const intervalRef = useRef<any>(null)
     // 进度条
     const [progress, setProgress] = useState(0)
-    // 播放模式
-    // const [playMode, setPlayMode] = useState('list')
     const playModeRef = useRef('list')
     const [modeDataIndex, setModeDataIndex] = useState(0)
 
@@ -184,15 +184,12 @@ const Player = () => {
         changeSong(index)
     }
 
-    // 判断是否可以播放, 并且获取当前播放时间
-    const handleCanPlay = () => {
-        clearInterval(intervalRef.current)
+    const timeUpdateEvent = () => {
         const audioElement = audioRef.current
-        intervalRef.current = setInterval(() => {
-            setCurrentTime(formatTime(audioElement.currentTime))
-            const percentage = (audioElement.currentTime / audioElement.duration) * 100
-            setProgress(percentage)
-        }, 1000)
+        setCurrentTime(formatTime(audioElement.currentTime))
+        setCurrentTimeNumber(audioElement.currentTime)
+        const percentage = (audioElement.currentTime / audioElement.duration) * 100
+        setProgress(percentage)
     }
 
     // 根据歌曲列表长度获取对应随机数下标
@@ -301,13 +298,13 @@ const Player = () => {
         }
 
         const audioElement = audioRef.current
-        audioElement.addEventListener('canplay', handleCanPlay)
+        audioElement.addEventListener('timeupdate', timeUpdateEvent)
         audioElement.addEventListener('play', handlePlay)
         audioElement.addEventListener('pause', handlePauseChange)
         return () => {
             audioRef.current.pause()
             audioRef.current.src = ''
-            audioElement.removeEventListener('canplay', handleCanPlay)
+            audioElement.removeEventListener('timeupdate', timeUpdateEvent)
             audioElement.removeEventListener('play', handlePlay)
             audioElement.removeEventListener('pause', handlePauseChange)
             clearInterval(intervalRef.current)
@@ -319,7 +316,7 @@ const Player = () => {
             <SongLyrics
                 songInfo={listData[activeIndex]}
                 isPlay={playStatus}
-                currentTime={currentTime}
+                currentTime={currentTimeNumber}
             />
             <div className={`${Style.footer}`}>
                 <div className={`flexSb ${Style.slider}`}>
