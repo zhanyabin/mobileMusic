@@ -2,7 +2,7 @@ import React, { memo, useState } from 'react'
 import Style from './index.module.less'
 import indexIcon from 'assets/images/index_icon_2x.png'
 import Title from 'components/Title'
-import { PlayCircleStrokeIcon } from 'tdesign-icons-react'
+import { PlayCircleStrokeIcon, PlayIcon } from 'tdesign-icons-react'
 import { BackTop, List } from 'tdesign-react'
 import { useNavigate } from 'react-router-dom'
 
@@ -36,6 +36,20 @@ const Ranking = (props: Interface) => {
             },
         })
     }
+
+    const playAllEvent = () => {
+        if (!data?.tracks) {
+            return
+        }
+        navigate('/player', {
+            state: {
+                songList: data?.tracks,
+                trackCount: data?.tracks?.length || 0,
+                isSongs: true,
+            },
+        })
+    }
+
     return (
         <>
             <div className={Style.topBlock}>
@@ -44,7 +58,13 @@ const Ranking = (props: Interface) => {
             </div>
 
             <div className={Style.musicList} style={listWrapStyle} ref={setContainer}>
-                <Title name={'音乐列表'} />
+                <div className={'flexSb'}>
+                    <Title name={'音乐列表'} />
+                    <div className={Style.playButton} onClick={playAllEvent}>
+                        <PlayIcon size={'24px'} style={{color: 'var(--td-brand-color-3)'}} />
+                        播放
+                    </div>
+                </div>
                 <List className={Style.newList}>
                     {(data.tracks || []).map((item: any) => (
                         <div

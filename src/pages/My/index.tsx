@@ -10,7 +10,6 @@ import myBgImg from 'assets/images/my_bg.jpg'
 import _ from 'lodash'
 import { getUserDetail, getUserPlayList } from 'api/Login'
 import { IUserInfo } from 'types/user'
-import { useUpdateEffect } from 'ahooks'
 import { useNavigate } from 'react-router-dom'
 
 const imgStyle = {

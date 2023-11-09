@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 import Style from './index.module.less'
 import Title from 'components/Title'
 import { Image } from 'tdesign-react'
-import { PlayCircleStrokeIcon } from 'tdesign-icons-react'
+import { PlayCircleStrokeIcon, PlayIcon } from 'tdesign-icons-react'
 import { useNavigate } from 'react-router-dom'
 
 interface Interface {
@@ -48,6 +48,27 @@ const Recommend = (props: Interface) => {
         </div>
     ))
 
+    const playAllEvent = () => {
+        let arr: any = []
+        newSongList.forEach(item => {
+            arr.push(item.song)
+        })
+        arr = arr.map((item: any) => {
+            console.log('item', item)
+            item.al = item.album
+            item.ar = item.artists
+            item.dt = item.duration
+            return item
+        })
+        navigate('/player', {
+            state: {
+                songList: arr,
+                trackCount: arr.length,
+                isSongs: true,
+            },
+        })
+    }
+
     const newList = newSongList.map((item) => (
         <div
             className={`${Style.item} flexSb`}
@@ -69,7 +90,13 @@ const Recommend = (props: Interface) => {
         <div className={Style.RecommendBox}>
             <Title name={'网友推荐'} />
             <div className={`${Style.playlistBox} ${Style.container}`}>{playList}</div>
-            <Title name={'最新音乐'} />
+            <div className={'flexSb'} style={{marginBottom: '10px'}}>
+                <Title name={'最新音乐'} />
+                <div className={Style.playButton} onClick={playAllEvent}>
+                    <PlayIcon size={'24px'} style={{color: 'var(--td-brand-color-3)'}} />
+                    播放
+                </div>
+            </div>
             <div className={Style.newList}>{newList}</div>
         </div>
     )

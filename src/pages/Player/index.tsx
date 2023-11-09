@@ -78,22 +78,30 @@ const Player = () => {
         background: 'black',
     }
 
-    // 获取歌单列表
-    const getSongList = () => {
+    const setData = (arr: any) => {
+        arr.forEach((item: any) => {
+            let arr: any[] = []
+            item.ar.forEach((ar: any) => {
+                arr.push(ar.name)
+            })
+            item.singer = arr.join('/')
+        })
+        const a = _.uniqBy(listData.concat(arr), 'id')
+        setListData(a)
+        if (activeIndex === -1) {
+            setActiveIndex(0)
+        }
+    }
+
+    // 获取歌单列表 判断是否是携带歌曲列表进入播放器页面
+    const getSongList = (list = []) => {
+        if (list.length > 0) {
+            setData(list)
+            return
+        }
         setIsLoading(true)
         getPlayListAll(search).then((res) => {
-            res.songs.forEach((item: any) => {
-                let arr: any[] = []
-                item.ar.forEach((ar: any) => {
-                    arr.push(ar.name)
-                })
-                item.singer = arr.join('/')
-            })
-            const arr = _.uniqBy(listData.concat(res.songs), 'id')
-            setListData(arr)
-            if (activeIndex === -1) {
-                setActiveIndex(0)
-            }
+            setData(res.songs)
             setIsLoading(false)
         })
     }
@@ -101,6 +109,7 @@ const Player = () => {
     // 分页
     const handleScroll = ({ scrollBottom }: { scrollBottom: number }) => {
         let total = location.state?.trackCount
+        console.log('total', total, 'search.offset', search.offset)
         if (!scrollBottom && search.offset < total) {
             setSearch({ ...search, offset: search.offset + search.limit })
         }
@@ -135,12 +144,13 @@ const Player = () => {
     const loadSong = async () => {
         const id = listData[activeIndex].id
         const songData = await getSongUrl(id)
-        console.log('songData', songData)
         if (!songData.data[0]?.url) {
             alert('无法获取到播放源自动切换到下一首')
             nextSong()
             return
         }
+        listData[activeIndex].dt = songData.data[0]?.time
+        setListData(listData)
         audioRef.current.src = songData.data[0]?.url
         // setPlayStatus(true)
         playSong()
@@ -289,14 +299,13 @@ const Player = () => {
     }, [modeDataIndex])
 
     useEffect(() => {
+        let { isSongs, id, songList } = location.state
         // 需要判断是否是歌单进入还是单首歌曲进入
-        let { isSongs, id } = location.state
         if (isSongs) {
-            getSongList()
+            getSongList(songList)
         } else {
             getSongDetailEvent(id)
         }
-
         const audioElement = audioRef.current
         audioElement.addEventListener('timeupdate', timeUpdateEvent)
         audioElement.addEventListener('play', handlePlay)
@@ -403,7 +412,7 @@ const Player = () => {
                     size='small'
                     split
                     className={Style.list}
-                    onScroll={handleScroll}>
+                    onScroll={location.state?.songList?.length > 0 ? () => {} : handleScroll}>
                     {listData.map((item: any, index: number) => (
                         <li
                             key={item.id}
