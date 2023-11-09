@@ -102,3 +102,15 @@ export function checkQr(key: string) {
         method: 'get'
     })
 }
+
+// 游客登录
+// 二维码登录-二维码检测扫码状态接口
+export function anonimousLogin() {
+    return request({
+        params: {
+            timestamp: new Date().getTime()
+        },
+        url: '/register/anonimous',
+        method: 'get'
+    })
+}

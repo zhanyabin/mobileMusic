@@ -9,7 +9,9 @@ const service: AxiosInstance = axios.create({
 
 service.interceptors.request.use(
     config => {
-        // 后端规定每次post请求需要增加时间戳，否则接口会被缓存
+        // config.headers['Token'] = ''
+
+        // 每次post请求需要增加时间戳，否则接口会被缓存
         if (config.method === 'get') {
             config.params = {
                 ...config.params,
@@ -21,10 +23,6 @@ service.interceptors.request.use(
                 _timestamp: new Date().getTime()
             }
         }
-
-        // if (store.getters.token) {
-        //     config.headers['Token'] = ''
-        // }
         return config
     },
     error => {
@@ -40,7 +38,11 @@ service.interceptors.response.use(
         //  轮询此接口可获取二维码扫码状态,800 为二维码过期,801 为等待扫码,802 为待确认,803 为授权登录成功(803 状态码下会返回 cookies),
         const codes = [200, 800, 801, 802,  803]
         if (!codes.includes(res.code) && res.code) {
-            MessagePlugin.error(res.message || res.codeMessage || 'Error', 3000).then()
+            if (res.code === -462) {
+                MessagePlugin.error('暂时无法获取音乐播放源，请先登录哦', 3000).then()
+            }  else {
+                MessagePlugin.error(res.message || res.codeMessage || 'Error', 3000).then()
+            }
             return Promise.reject(new Error(res.message || res.codeMessage  || 'Error'))
         } else {
             return res

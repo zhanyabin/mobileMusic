@@ -25,6 +25,7 @@ const My = () => {
     const [isShowLogin, setIsShowLogin] = useState(false)
     const [musicILike, setMusicILike] = useState<any>({})
     const [collectList, setCollectList] = useState([])
+    const [createList, setCreateList] = useState([])
 
     const { userInfo }: { userInfo: IUserInfo | any } = useAppSelector(selectGlobal)
 
@@ -41,11 +42,14 @@ const My = () => {
         if (userInfo.profile?.userId) {
             const { playlist } = await getUserPlayList(userInfo.profile?.userId)
             if (playlist.length > 0) {
-                console.log('data', playlist)
                 const likeMusic = playlist[0]
                 setMusicILike(likeMusic)
                 const myList = playlist.slice(1)
-                setCollectList(myList)
+                // 根据用户id筛选出收藏的歌单和创建的歌单
+                const myCreateList = myList.filter((item: any) => item.userId === userInfo.profile?.userId)
+                const myCollectList = myList.filter((item: any) => item.userId !== userInfo.profile?.userId)
+                setCreateList(myCreateList)
+                setCollectList(myCollectList)
             }
         }
     }
@@ -67,7 +71,28 @@ const My = () => {
         closeLoginDrawer()
     }
 
-    const songList = collectList.map((item: any) => (
+    const collectListDom = collectList.map((item: any) => (
+        <div
+            className={`${Style.songBox} flexStart`}
+            key={item.id}
+            onClick={() => {
+                openPage(item.id, item.trackCount)
+            }}>
+            <Image
+                className={Style.likeImg}
+                fit={'fill'}
+                shape={'round'}
+                src={item.coverImgUrl}
+                placeholder={<div style={imgStyle}></div>}
+            ></Image>
+            <div className={Style.rightBox}>
+                <div className={Style.likeName}>{item.name}</div>
+                <div className={Style.likeTrackCount}>{item.trackCount || 0}首</div>
+            </div>
+        </div>
+    ))
+
+    const createListDom = createList.map((item: any) => (
         <div
             className={`${Style.songBox} flexStart`}
             key={item.id}
@@ -130,22 +155,16 @@ const My = () => {
 
                         <div className={`${Style.myLike}`}>
                             <div className={Style.title}>
-                                创建歌单 ({collectList.length || 0}个)
+                                创建歌单 ({createList.length || 0}个)
                             </div>
-                            {songList}
-                            {/*<div className={'flexStart'}>*/}
-                            {/*    <Image*/}
-                            {/*        className={Style.likeImg}*/}
-                            {/*        fit={'fill'}*/}
-                            {/*        shape={'round'}*/}
-                            {/*        src={musicILike.coverImgUrl}></Image>*/}
-                            {/*    <div>*/}
-                            {/*        <div className={Style.likeName}>我喜欢的音乐</div>*/}
-                            {/*        <div className={Style.likeTrackCount}>*/}
-                            {/*            {musicILike.trackCount || 0}首*/}
-                            {/*        </div>*/}
-                            {/*    </div>*/}
-                            {/*</div>*/}
+                            {createListDom}
+                        </div>
+
+                        <div className={`${Style.myLike}`}>
+                            <div className={Style.title}>
+                                收藏歌单 ({collectList.length || 0}个)
+                            </div>
+                            {collectListDom}
                         </div>
                     </>
                 ) : (
