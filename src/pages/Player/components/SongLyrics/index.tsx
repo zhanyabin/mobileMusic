@@ -133,6 +133,7 @@ const SongLyrics = (props: Interface) => {
                 <BackgroundRender style={{display: isMove ? '' : 'none'}} className={Style.backgroundRender} albumImageUrl={songInfo?.al.picUrl}  />
                 <div className={Style.iconFont} onClick={() => {
                     setIsMove(!isMove)
+                    console.log(11111)
                     MessagePlugin.info({
                         content: `${isMove ? '关闭' : '开启'}流体背景`,
                         placement: 'center',
