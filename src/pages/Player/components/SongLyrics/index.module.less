@@ -1,15 +1,25 @@
 .songBox {
     width: 100%;
-    //height: calc(100vh - var(--td-comp-size-xxxl));
     height: 100%;
     color: white;
+    position: relative;
+    pointer-events: auto;
+    .backgroundRender {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 1;
+        display: flex;
+    }
     .mask {
         width: 100%;
-        //height: calc(100vh - var(--td-comp-size-xxxl));
         height: 100%;
         background: rgba(0, 0, 0, 0.4);
         position: absolute;
-        top: var(--td-comp-size-xxxl);
+        top: 0;
         left: 0;
         pointer-events: none;
         z-index: 1;
@@ -72,4 +82,17 @@
         transition: transform 0.1s ease-out 0s;
         transform: translateY(100px);
     }
+}
+
+.iconFont {
+    color: white;
+    padding: 3px;
+    box-sizing: border-box;
+    border: 1px solid white;
+    border-radius: 8px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    z-index: 4;
+    pointer-events: auto;
 }

@@ -6,6 +6,11 @@ import { getMusicLyric } from 'api/Player'
 import SongImg from '../SongImg'
 import ColorThief from 'colorthief'
 import _ from 'lodash'
+import { BackgroundRender } from '@applemusic-like-lyrics/react'
+import {
+    SonicIcon,
+} from 'tdesign-icons-react'
+import {MessagePlugin} from "tdesign-react";
 
 interface Interface {
     songInfo: ISong
@@ -27,6 +32,7 @@ const SongLyrics = (props: Interface) => {
     const [bgColor, setBgColor] = useState('')
     const [activeLyricId, setActiveLyricId] = useState('')
     const [translateHeight, setTranslateHeight] = useState(defaultHeight)
+    const [isMove, setIsMove] = useState(false)
 
     const getMusicLry = async (id: number) => {
         const data: ILyric = await getMusicLyric(id)
@@ -124,6 +130,18 @@ const SongLyrics = (props: Interface) => {
     return (
         <>
             <div className={Style.songBox} style={{ background: bgColor }}>
+                <BackgroundRender style={{display: isMove ? '' : 'none'}} className={Style.backgroundRender} albumImageUrl={songInfo?.al.picUrl}  />
+                <div className={Style.iconFont} onClick={() => {
+                    setIsMove(!isMove)
+                    MessagePlugin.info({
+                        content: `${isMove ? '关闭' : '开启'}流体背景`,
+                        placement: 'center',
+                        icon: false,
+                        duration: 500,
+                    })
+                }}>
+                    <SonicIcon size={'30px'} />
+                </div>
                 <div className={Style.SongInfo}>
                     <div className={Style.title}>{songInfo?.name}</div>
                     <span>{songInfo?.ar.map((item) => item.name).join('/')}</span>
@@ -138,7 +156,7 @@ const SongLyrics = (props: Interface) => {
                         {lyricDom}
                     </div>
                 </div>
-                <div className={Style.mask} style={{height: `calc(${window.innerHeight}px - var(--td-comp-size-xxxl))`}}></div>
+                <div className={Style.mask}></div>
             </div>
         </>
     )
