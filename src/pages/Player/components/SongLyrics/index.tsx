@@ -1,4 +1,4 @@
-import React, {memo, useState, useRef, useEffect} from 'react'
+import React, {memo, useState} from 'react'
 import Style from './index.module.less'
 import { useUpdateEffect } from 'ahooks'
 import { ILyric, ISong } from './songType'
@@ -65,7 +65,7 @@ const SongLyrics = (props: Interface) => {
         const colorThief = new ColorThief()
         const imageElement = document.createElement('img')
         imageElement.crossOrigin = 'Anonymous'
-        imageElement.src = songInfo?.al.picUrl
+        imageElement.src = songInfo?.al.picUrl + '?param=100y100'
 
         imageElement.onload = () => {
             // 获取颜色调色板，包含2个颜色
