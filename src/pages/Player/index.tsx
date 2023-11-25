@@ -3,6 +3,7 @@ import _ from 'lodash'
 import { useLocation } from 'react-router-dom'
 import { List, Drawer, MessagePlugin } from 'tdesign-react'
 import wave from 'assets/images/wave.gif'
+import equalizer from 'assets/images/equalizer.gif'
 import { useUpdateEffect } from 'ahooks'
 import { getPlayListAll } from 'api/Home'
 import { getSongDetail, getSongUrl } from 'api/Player'
@@ -261,6 +262,20 @@ const Player = () => {
         setPlayStatus(true)
     }
 
+    const changeIcon =  () => {
+        if (themeMode === 'light') {
+            return <img
+                className={Style.waveIcon}
+                src={equalizer}
+            />
+        } else {
+            return <img
+                className={Style.waveIcon}
+                src={wave}
+            />
+        }
+    }
+
     // 用于分页
     useUpdateEffect(() => {
         getSongList()
@@ -422,11 +437,7 @@ const Player = () => {
                             }}>
                             <div className={Style.index}>
                                 {activeIndex === index && playStatus ? (
-                                    <img
-                                        src={wave}
-                                        style={themeMode === 'light' ? styleGif : {}}
-                                        alt=''
-                                    />
+                                    changeIcon()
                                 ) : (
                                     index + 1
                                 )}
