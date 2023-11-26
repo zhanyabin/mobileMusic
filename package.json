@@ -7,7 +7,7 @@
         "dev": "vite",
         "build": "tsc && vite build",
         "preview": "vite preview",
-        "prettier": "prettier --write ./**/*.{js,json,wxss,wxml,wxs,ts,tsx}"
+        "prettier": "prettier --write ./**/*.{js,json,ts,tsx}"
     },
     "dependencies": {
         "@applemusic-like-lyrics/react": "0.0.13",

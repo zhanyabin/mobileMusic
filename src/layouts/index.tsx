@@ -1,7 +1,7 @@
 import React, { memo, Suspense, useEffect, useState } from 'react'
 import { useRoutes } from 'react-router-dom'
 import routers from '@/routers'
-import { Layout } from 'tdesign-react'
+import { Layout, DialogPlugin } from 'tdesign-react'
 import { useAppDispatch, useAppSelector } from 'modules/store'
 import { selectGlobal, toggleSetting, changeUserInfo } from 'modules/global'
 import { Drawer } from 'tdesign-react'
@@ -43,6 +43,19 @@ export default memo(() => {
 
     useEffect(() => {
         getLoginStatus()
+        const alertDia = DialogPlugin.alert({
+            width: '350px',
+            // header: '提示',
+            closeBtn: false,
+            footer: false,
+            body: '由于网易云的安全拦截策略，未登录用户播放歌曲会出现【网络太拥挤，请稍后再试】的错误，建议先点击右上角前往【我的】页面进行登录，以获取更好的体验',
+            onConfirm: ({ e }) => {
+                alertDia.hide();
+            },
+            onClose: ({ e, trigger }) => {
+                alertDia.hide();
+            },
+        })
         window.addEventListener('resize', setHeightEvent, false)
         return () => {
             window.removeEventListener('resize', setHeightEvent)
