@@ -28,7 +28,6 @@ const LoginDrawer = (props: Interface) => {
     const timer = useRef<number | NodeJS.Timeout | null>(null)
 
     const onSubmit = async ({ validateResult, fields }: SubmitContext) => {
-        console.log('fields', fields)
         if (validateResult === true) {
             const loginData = await login(fields)
             if (loginData.code === 200) {
@@ -42,7 +41,6 @@ const LoginDrawer = (props: Interface) => {
         const keyData = await getQrKey()
         const key = keyData?.data?.unikey
         const qrUrl =  await createQrUrl(key)
-        console.log('qrUrl?.data?.qrurl', qrUrl?.data?.qrimg)
         setQrKey(key)
         setQrUrl(qrUrl?.data?.qrimg)
         setCountDown(defaultCountdown)
@@ -79,7 +77,6 @@ const LoginDrawer = (props: Interface) => {
             timer.current = setInterval(() => {
                 // 开始调用轮询接口
                 checkQr(qrKey).then(res => {
-                    console.log('res', res)
                     //  轮询此接口可获取二维码扫码状态
                     //  800 为二维码过期,801 为等待扫码
                     //  802 为待确认
@@ -102,7 +99,6 @@ const LoginDrawer = (props: Interface) => {
                 setCountDown((num) => num - 1)
             }, 1000)
         } else {
-            console.log('清除')
             clearInterval(timer.current as NodeJS.Timeout)
         }
 
