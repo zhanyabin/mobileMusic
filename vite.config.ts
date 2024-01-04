@@ -12,6 +12,7 @@ export default defineConfig({
                 // target: 'http://localhost:3000/',
                 // 线上
                 target: 'https://service-eq8476me-1322095897.gz.apigw.tencentcs.com/',
+                // target: 'https://mu-api.yuk0.com/',
                 changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/api/, '')
             },

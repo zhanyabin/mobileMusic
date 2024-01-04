@@ -14,13 +14,14 @@ service.interceptors.request.use(
         // 每次post请求需要增加时间戳，否则接口会被缓存
         if (config.method === 'get') {
             config.params = {
+                realIP: '183.197.189.111',
                 ...config.params,
             }
         } else if (config.method === 'post') {
             config.data = {
                 ...config.data,
-                // realIP: randomIp(),
-                _timestamp: new Date().getTime()
+                realIP: '183.197.189.111',
+                timestamp: new Date().getTime()
             }
         }
         return config
@@ -43,14 +44,12 @@ service.interceptors.response.use(
             }  else {
                 MessagePlugin.error(res.message || res.codeMessage || 'Error', 3000).then()
             }
-            return Promise.reject(new Error(res.message || res.codeMessage  || 'Error'))
-        } else {
-            return res
         }
+        return res
     },
     error => {
         MessagePlugin.error(error.response.data.message ||  error.message || 'Error', 3000).then()
-        return Promise.reject(error.response.data.message || error.message || error)
+        return error.response.data
     }
 )
 

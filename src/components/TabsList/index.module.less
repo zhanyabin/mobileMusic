@@ -1,0 +1,41 @@
+.tabsListBox {
+    width: 100%;
+    padding: 3px;
+    font-size: 16px;
+    color: var(--td-text-color-primary);
+    background: var(--td-bg-color-secondarycontainer);
+    border-radius: 3px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+
+    .tabWrapper {
+        flex-basis: 0;
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .tabsTab {
+            overflow: hidden;
+            border-radius: 3px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-wrap: nowrap;
+            background-clip: padding-box;
+            padding: 6px 0;
+            transition: box-shadow .3s cubic-bezier(.4, 0, .2, 1), color .3s cubic-bezier(.4, 0, .2, 1), background-color .3s cubic-bezier(.4, 0, .2, 1), border-color .3s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .tabActive {
+            font-weight: 500;
+            background-color: var(--tab-color-segmen);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .08);
+        }
+    }
+}

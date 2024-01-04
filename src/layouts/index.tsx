@@ -21,16 +21,17 @@ export default memo(() => {
 
     const getLoginStatus = async () => {
         // 如果没有token则默认游客登录  游客id 8949707087
-        const MUSIC_U = getToken()
-        if (!MUSIC_U) {
-            await anonimousLogin()
-        }
+        // const MUSIC_U = getToken()
+        // if (!MUSIC_U) {
+        //     await anonimousLogin()
+        // }
         // 判断是否是匿名用户以及是否登录
         const { data } = await loginStatus()
-        const anonimousUser = data?.account?.anonimousUser
+        // const anonimousUser = data?.account?.anonimousUser
         const id = data?.account?.id
-        const display = [8949024981, 8949707087]
-        if (!anonimousUser && id && !display.includes(data?.profile?.userId)) {
+        // const display = [8949024981, 8949707087]
+        // if (!anonimousUser && id && !display.includes(data?.profile?.userId)) {
+        if ( id ) {
             const userData = await getUserDetail(id)
             dispatch(changeUserInfo(userData))
         }
@@ -43,19 +44,19 @@ export default memo(() => {
 
     useEffect(() => {
         getLoginStatus()
-        const alertDia = DialogPlugin.alert({
-            width: '350px',
-            // header: '提示',
-            closeBtn: false,
-            footer: false,
-            body: '由于网易云的安全拦截策略，未登录用户播放歌曲会出现【网络太拥挤，请稍后再试】的错误，建议先点击右上角前往【我的】页面进行登录，以获取更好的体验',
-            onConfirm: ({ e }) => {
-                alertDia.hide();
-            },
-            onClose: ({ e, trigger }) => {
-                alertDia.hide();
-            },
-        })
+        // const alertDia = DialogPlugin.alert({
+        //     width: '350px',
+        //     // header: '提示',
+        //     closeBtn: false,
+        //     footer: false,
+        //     body: '由于网易云的安全拦截策略，未登录用户播放歌曲会出现【网络太拥挤，请稍后再试】的错误，建议先点击右上角前往【我的】页面进行登录，以获取更好的体验',
+        //     onConfirm: ({ e }) => {
+        //         alertDia.hide();
+        //     },
+        //     onClose: ({ e, trigger }) => {
+        //         alertDia.hide();
+        //     },
+        // })
         window.addEventListener('resize', setHeightEvent, false)
         return () => {
             window.removeEventListener('resize', setHeightEvent)

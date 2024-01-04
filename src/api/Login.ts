@@ -2,11 +2,11 @@ import request from 'utils/request'
 import { getToken } from 'utils/auth'
 
 // 登陆
-export function login(data: { phone: string,  password: string}) {
+export function login(data: { phone: string,  password: string, captcha?: string}) {
     return request({
         url: '/login/cellphone',
         method: 'post',
-        params: data,
+        data,
     })
 }
 
@@ -14,10 +14,7 @@ export function login(data: { phone: string,  password: string}) {
 export function logout() {
     return request({
         url: '/logout',
-        method: 'post',
-        params: {
-            timestamp: new Date().getTime()
-        }
+        method: 'post'
     })
 }
 
@@ -111,6 +108,42 @@ export function anonimousLogin() {
             timestamp: new Date().getTime()
         },
         url: '/register/anonimous',
+        method: 'get'
+    })
+}
+
+// 发送验证码
+export function captchaSent(phone: string | number) {
+    return request({
+        params: {
+            timestamp: new Date().getTime(),
+            phone,
+        },
+        url: '/captcha/sent',
+        method: 'get'
+    })
+}
+
+// 验证验证码
+export function captchaVerify(params: {phone: string | number, captcha: string}) {
+    return request({
+        params: {
+            timestamp: new Date().getTime(),
+            ...params
+        },
+        url: '/captcha/verify',
+        method: 'get'
+    })
+}
+
+// 验证接口-二维码生成 /verify/getQr
+export function verifyGetQr(params: any) {
+    return request({
+        params: {
+            timestamp: new Date().getTime(),
+            ...params
+        },
+        url: '/verify/getQr',
         method: 'get'
     })
 }
