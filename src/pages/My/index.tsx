@@ -152,14 +152,14 @@ const My = () => {
                             </div>
                         </div>
 
-                        <div className={`${Style.myLike}`}>
+                        <div className={`${Style.myLike} ${createList.length === 0 ? Style.hide : ''}`}>
                             <div className={Style.title}>
                                 创建歌单 ({createList.length || 0}个)
                             </div>
                             {createListDom}
                         </div>
 
-                        <div className={`${Style.myLike}`}>
+                        <div className={`${Style.myLike} ${collectList.length === 0 ? Style.hide : ''}`}>
                             <div className={Style.title}>
                                 收藏歌单 ({collectList.length || 0}个)
                             </div>

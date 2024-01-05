@@ -30,7 +30,7 @@ const SongLyrics = (props: Interface) => {
     const [bgColor, setBgColor] = useState('')
     const [activeLyricId, setActiveLyricId] = useState('')
     const [translateHeight, setTranslateHeight] = useState(defaultHeight)
-    const [isMove, setIsMove] = useState(false)
+    const [isMove, setIsMove] = useState(true)
 
     const getMusicLry = async (id: number) => {
         const data: ILyric = await getMusicLyric(id)

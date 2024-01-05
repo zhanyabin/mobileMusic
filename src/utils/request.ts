@@ -14,13 +14,13 @@ service.interceptors.request.use(
         // 每次post请求需要增加时间戳，否则接口会被缓存
         if (config.method === 'get') {
             config.params = {
-                realIP: '183.197.189.111',
+                // realIP: '183.197.189.111',
                 ...config.params,
             }
         } else if (config.method === 'post') {
             config.data = {
                 ...config.data,
-                realIP: '183.197.189.111',
+                // realIP: '183.197.189.111',
                 timestamp: new Date().getTime()
             }
         }
@@ -40,7 +40,7 @@ service.interceptors.response.use(
         const codes = [200, 800, 801, 802,  803]
         if (!codes.includes(res.code) && res.code) {
             if (res.code === -462) {
-                MessagePlugin.error('暂时无法获取音乐播放源，请先登录哦', 3000).then()
+                MessagePlugin.error('暂时无法获取音乐播放源', 3000).then()
             }  else {
                 MessagePlugin.error(res.message || res.codeMessage || 'Error', 3000).then()
             }

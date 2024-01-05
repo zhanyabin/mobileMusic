@@ -6,7 +6,10 @@ export function login(data: { phone: string,  password: string, captcha?: string
     return request({
         url: '/login/cellphone',
         method: 'post',
-        data,
+        data: {
+            ...data,
+            noCookie: true,
+        },
     })
 }
 
